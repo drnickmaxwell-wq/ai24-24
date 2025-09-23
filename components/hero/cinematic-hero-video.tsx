@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 type Props = { videoSrc?: string; posterSrc?: string; title?: string; subtitle?: string; className?: string; autoPlay?: boolean; muted?: boolean; loop?: boolean; };
 export default function CinematicHeroVideo({
   videoSrc = "", // can be empty while you fight video; poster will show
-  posterSrc = "/videos/hero-poster.jpg",
+  posterSrc = "/videos/hero/hero-poster.jpg",
   title = "St Mary’s House Dental Care",
   subtitle = "Luxury, 3D-first dentistry in Shoreham-by-Sea.",
   className = "", autoPlay = true, muted = true, loop = true,

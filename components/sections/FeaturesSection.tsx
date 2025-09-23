@@ -1,6 +1,6 @@
 import { Diamond, UserCheck, MapPin } from 'lucide-react';
-import GlowCard from '../ui/GlowCard';
-import Reveal from '../ui/Reveal';
+import GlowCard from '@/components/fx/GlowCard';
+import Reveal from '@/components/effects/Reveal';
 
 export function FeaturesSection() {
   const features = [
