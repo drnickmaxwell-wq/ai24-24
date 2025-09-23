@@ -1,128 +1,96 @@
 "use client";
 
+import React from "react";
 import dynamic from "next/dynamic";
 
-// Lazy load components
-const HeroVideo = dynamic(
-  () => import("@/components/hero/cinematic-hero-video").then((m) => m.default),
+// Dynamic imports for client-side components
+const InteractiveHero = dynamic(
+  () => import("@/components/hero/InteractiveHero"),
   { ssr: false }
 );
 
-const ShimmerText = dynamic(
-  () => import("@/components/fx/ShimmerText").then((m) => m.default),
-  { ssr: false }
-);
-
-const SparkleButton = dynamic(
-  () => import("@/components/ui/SparkleButton").then((m) => m.default),
+const TreatmentCards = dynamic(
+  () => import("@/components/sections/TreatmentCards"),
   { ssr: false }
 );
 
 const WaveBackground = dynamic(
-  () => import("@/components/fx/WaveBackground").then((m) => m.default),
+  () => import("@/components/fx/WaveBackground"),
   { ssr: false }
 );
 
-const FeaturesSection = dynamic(
-  () =>
-    import("@/components/sections/FeaturesSection").then(
-      (m) => m.default ?? m.FeaturesSection
-    ),
-  { ssr: false }
-);
-
-const TreatmentsSection = dynamic(
-  () =>
-    import("@/components/sections/TreatmentsSection").then(
-      (m) => m.default ?? m.TreatmentsSection
-    ),
-  { ssr: false }
-);
-
-const TestimonialsSection = dynamic(
-  () =>
-    import("@/components/sections/TestimonialsSection").then(
-      (m) => m.default ?? m.TestimonialsSection
-    ),
+const SparkleButton = dynamic(
+  () => import("@/components/ui/SparkleButton"),
   { ssr: false }
 );
 
 export default function HomeInkClient() {
   return (
-    <main
-      className="relative min-h-dvh bg-[var(--background)] text-[var(--foreground)] overflow-hidden"
-      data-theme="ink"
-    >
+    <div data-theme="ink" className="theme-bg min-h-screen">
       {/* Hero Section */}
-      <section className="relative z-10 mx-auto max-w-[var(--max-width)] px-6 py-24 md:py-32">
-        <HeroVideo
-          videoSrc="/hero-video.mp4"
-          posterSrc="/videos/hero/hero-poster.jpg"
-          title="Precision. Beauty. 3D Dentistry."
-          subtitle="Advanced dental care in the heart of Sussex"
-        />
+      <InteractiveHero theme="ink" />
+      
+      {/* Treatment Cards Section */}
+      <TreatmentCards />
+      
+      {/* CTA Section with Wave Background */}
+      <section className="relative py-20 overflow-hidden">
+        <WaveBackground variant="ink" />
         
-        {/* Hero CTAs */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <SparkleButton 
-            href="/fees" 
-            variant="gold" 
-            size="lg"
-            className="focus-visible:ring-[var(--gold)]/50"
-          >
-            Fees & Finance
-          </SparkleButton>
-          <SparkleButton 
-            href="/about" 
-            variant="turquoise" 
-            size="lg"
-            className="focus-visible:ring-[var(--turquoise)]/50"
-          >
-            Meet the Team
-          </SparkleButton>
+        <div className="relative z-10 max-w-[var(--content)] mx-auto px-6 text-center">
+          <div className="theme-glass theme-border rounded-[var(--radius)] p-12 max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--ink)] mb-6">
+              Ready to Experience 
+              <span className="text-gradient-magenta-teal block mt-2">
+                Luxury Coastal Dentistry?
+              </span>
+            </h2>
+            
+            <p className="text-xl text-[var(--ink-soft)] mb-8 max-w-2xl mx-auto">
+              Join thousands of satisfied patients who have transformed their smiles 
+              with our award-winning dental care in beautiful Shoreham-by-Sea.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <SparkleButton
+                href="/contact"
+                variant="magenta"
+                size="lg"
+                className="text-lg px-8 py-4"
+              >
+                📞 Call Now: 01273 453109
+              </SparkleButton>
+              <SparkleButton
+                href="/booking"
+                variant="turquoise"
+                size="lg"
+                className="text-lg px-8 py-4"
+              >
+                📅 Book Online 24/7
+              </SparkleButton>
+            </div>
+            
+            {/* Trust indicators */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-[var(--border)]">
+              <div className="text-center">
+                <div className="text-2xl mb-2">🏆</div>
+                <div className="font-semibold text-[var(--ink)]">CQC Outstanding</div>
+                <div className="text-sm text-[var(--ink-soft)]">Highest Rating</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl mb-2">⭐</div>
+                <div className="font-semibold text-[var(--ink)]">98% Satisfaction</div>
+                <div className="text-sm text-[var(--ink-soft)]">Patient Reviews</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl mb-2">🚑</div>
+                <div className="font-semibold text-[var(--ink)]">24/7 Emergency</div>
+                <div className="text-sm text-[var(--ink-soft)]">Always Available</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
-
-      {/* Features Section */}
-      <section className="relative z-10 max-w-[var(--max-width)] w-full py-16 md:py-24 px-4 mx-auto">
-        <FeaturesSection />
-      </section>
-
-      {/* Treatments Section */}
-      <section className="relative z-10 max-w-[var(--max-width)] w-full py-16 md:py-24 px-4 mx-auto">
-        <TreatmentsSection />
-      </section>
-
-      {/* CTA Section with Wave Background */}
-      <section className="relative py-20 md:py-32">
-        <WaveBackground variant="dark" className="min-h-[400px]">
-          <div className="max-w-[var(--max-width)] mx-auto px-6 text-center">
-            <ShimmerText 
-              as="h2" 
-              shimmerColor="magenta"
-              className="text-3xl md:text-5xl font-bold mb-6"
-            >
-              Transform Your Smile Tonight
-            </ShimmerText>
-            <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Discover the future of dentistry with our cutting-edge 3D technology and personalized care.
-            </p>
-            <SparkleButton 
-              href="/contact" 
-              variant="magenta" 
-              size="lg"
-              className="focus-visible:ring-[var(--magenta)]/50"
-            >
-              Book Your Consultation
-            </SparkleButton>
-          </div>
-        </WaveBackground>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="relative z-10 max-w-[var(--max-width)] w-full py-16 md:py-24 px-4 mx-auto">
-        <TestimonialsSection />
-      </section>
-    </main>
+    </div>
   );
 }
