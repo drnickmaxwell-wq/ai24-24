@@ -21,8 +21,9 @@ export default function CinematicHeroVideo({
 
   return (
     <div className={`relative w-full overflow-hidden rounded-[var(--radius)] ${className}`}>
+      {/* Top and bottom gradient masks for text contrast */}
       <div aria-hidden className="pointer-events-none absolute inset-0 z-10"
-           style={{ background:"linear-gradient(to bottom, rgba(0,0,0,.35) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,.45) 100%)", mixBlendMode:"multiply" }} />
+           style={{ background:"linear-gradient(to bottom, rgba(0,0,0,.45) 0%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,.55) 100%)" }} />
       <video ref={ref} className="block h-[46vh] w-full object-cover md:h-[58vh] lg:h-[64vh]"
              src={videoSrc || undefined} poster={posterSrc} autoPlay={!!videoSrc && autoPlay}
              muted={muted} loop={loop} playsInline preload="metadata" />
@@ -34,7 +35,7 @@ export default function CinematicHeroVideo({
       </div>
       {!loaded && (
         <div aria-hidden className="absolute inset-0 z-0"
-             style={{ background:"linear-gradient(135deg, rgba(194,24,91,.10) 0%, rgba(64,196,180,.16) 100%)" }} />
+             style={{ background:"linear-gradient(135deg, rgba(255,182,193,.15) 0%, rgba(64,196,180,.20) 100%)" }} />
       )}
     </div>
   );
