@@ -1,122 +1,118 @@
-"use client";
+'use client';
 
-import React from "react";
-import dynamic from "next/dynamic";
-
-const FloatingBubbles = dynamic(
-  () => import("@/components/fx/FloatingBubbles"),
-  { ssr: false }
-);
-
-const SparkleButton = dynamic(
-  () => import("@/components/ui/SparkleButton"),
-  { ssr: false }
-);
+import React from 'react';
+import { motion } from 'framer-motion';
+import CinematicHeroVideo from './cinematic-hero-video';
+import { BubbleSystem, SparkleSystem } from '@/components/fx/ParticleSystem';
 
 interface InteractiveHeroProps {
-  theme?: "light" | "ink";
+  theme: 'light' | 'ink';
 }
 
-export default function InteractiveHero({ theme = "light" }: InteractiveHeroProps) {
+export default function InteractiveHero({ theme }: InteractiveHeroProps) {
   return (
-    <section className="relative min-h-[80vh] overflow-hidden py-24 md:py-32">
+    <section className="relative py-24 md:py-32 overflow-hidden">
       {/* Hero underlay from tokens */}
       <div className="absolute inset-0 hero-underlay -z-10" />
       
-      {/* Wave background image */}
-      <div 
-        className="absolute inset-0 opacity-90"
-        style={{
-          backgroundImage: "url('/waves-bg-2560.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
+      {/* Particle Systems - All Special Effects */}
+      <BubbleSystem 
+        className="z-10" 
+        particleCount={30} 
+        intensity="medium" 
       />
+      <SparkleSystem 
+        className="z-10" 
+        particleCount={15} 
+        intensity="low" 
+      />
+      
+      {/* Main Hero Content */}
+      <div className="relative z-20 max-w-[var(--content)] mx-auto px-6">
+        {/* Cinematic Hero Video */}
+        <div className="mb-12">
+          <CinematicHeroVideo 
+            theme={theme}
+            autoplay={true}
+            muted={true}
+            showControls={true}
+            className="rounded-[var(--radius)] overflow-hidden shadow-2xl"
+          />
+        </div>
+        
+        {/* Stats Section with Brand Gradient Icon Tiles */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16"
+        >
+          {/* CQC Outstanding */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            className="text-center group"
+          >
+            <div className="h-16 w-16 rounded-2xl grad-pink-teal grid place-items-center mx-auto mb-4 shadow-lg group-hover:shadow-[var(--magenta)]/25 transition-all duration-300">
+              <span className="text-2xl">🏆</span>
+            </div>
+            <h3 className="text-xl font-bold text-[var(--ink)] mb-2">CQC Outstanding</h3>
+            <p className="text-[var(--ink-soft)]">Highest possible rating for quality and safety</p>
+          </motion.div>
+          
+          {/* 98% Satisfaction */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            className="text-center group"
+          >
+            <div className="h-16 w-16 rounded-2xl grad-turquoise-gold grid place-items-center mx-auto mb-4 shadow-lg group-hover:shadow-[var(--turquoise)]/25 transition-all duration-300">
+              <span className="text-2xl">⭐</span>
+            </div>
+            <h3 className="text-xl font-bold text-[var(--ink)] mb-2">98% Satisfaction</h3>
+            <p className="text-[var(--ink-soft)]">Based on over 1,000 patient reviews</p>
+          </motion.div>
+          
+          {/* 24/7 Emergency */}
+          <motion.div
+            whileHover={{ scale: 1.05, y: -5 }}
+            className="text-center group"
+          >
+            <div className="h-16 w-16 rounded-2xl grad-gold-pink grid place-items-center mx-auto mb-4 shadow-lg group-hover:shadow-[var(--gold)]/25 transition-all duration-300">
+              <span className="text-2xl">🚑</span>
+            </div>
+            <h3 className="text-xl font-bold text-[var(--ink)] mb-2">24/7 Emergency</h3>
+            <p className="text-[var(--ink-soft)]">Always here when you need us most</p>
+          </motion.div>
+        </motion.div>
+        
+        {/* Floating Dental Icons */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-[var(--turquoise)]/20 text-2xl"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -20, 0],
+                rotate: [0, 5, -5, 0],
+                opacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{
+                duration: 4 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            >
+              {['🦷', '✨', '💎', '🌊'][Math.floor(Math.random() * 4)]}
+            </motion.div>
+          ))}
+        </div>
+      </div>
       
       {/* Hero mask from tokens */}
       <div className="absolute inset-0 hero-mask z-10" aria-hidden />
-      
-      {/* Floating bubbles animation */}
-      <FloatingBubbles count={25} />
-      
-      {/* Content */}
-      <div className="relative z-20 max-w-[var(--content)] mx-auto px-6 text-center">
-        <div className="space-y-8">
-          {/* Main heading with gradient text */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-            <span className="block text-gradient-magenta-teal">
-              Interactive
-            </span>
-            <span className="block text-white mt-2">
-              Dental Visualization
-            </span>
-          </h1>
-          
-          {/* Subheading */}
-          <div className="space-y-4">
-            <h2 className="text-2xl md:text-4xl font-semibold text-white">
-              Your Perfect Smile is Just
-            </h2>
-            <p className="text-xl md:text-2xl text-gradient-magenta-teal font-medium">
-              One Click Away
-            </p>
-          </div>
-          
-          {/* Description */}
-          <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed">
-            Experience the future of dental care with our cutting-edge 3D visualization technology 
-            and award-winning coastal practice.
-          </p>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-            <SparkleButton 
-              href="/contact" 
-              variant="magenta" 
-              size="lg"
-              className="text-lg px-8 py-4"
-            >
-              📅 Book Free Consultation
-            </SparkleButton>
-            <SparkleButton 
-              href="/ai-smile-quiz" 
-              variant="turquoise" 
-              size="lg"
-              className="text-lg px-8 py-4"
-            >
-              ✨ Try AI Smile Quiz
-            </SparkleButton>
-          </div>
-          
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-16 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="h-16 w-16 rounded-2xl grad-gold-pink grid place-items-center mx-auto mb-4">
-                <span className="text-2xl">📞</span>
-              </div>
-              <div className="text-yellow-300 font-bold text-lg">24/7 Emergency</div>
-              <div className="text-white/80 text-sm">Always Available</div>
-            </div>
-            
-            <div className="text-center">
-              <div className="h-16 w-16 rounded-2xl grad-pink-teal grid place-items-center mx-auto mb-4">
-                <span className="text-2xl">🏆</span>
-              </div>
-              <div className="text-yellow-300 font-bold text-lg">CQC Outstanding Rating</div>
-              <div className="text-white/80 text-sm">Highest Quality Standards</div>
-            </div>
-            
-            <div className="text-center">
-              <div className="h-16 w-16 rounded-2xl grad-teal-gold grid place-items-center mx-auto mb-4">
-                <span className="text-2xl">⭐</span>
-              </div>
-              <div className="text-yellow-300 font-bold text-lg">98% Patient Satisfaction</div>
-              <div className="text-white/80 text-sm">Exceptional Care</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }
