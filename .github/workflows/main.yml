@@ -1,0 +1,158 @@
+name: Auto Fix Preview
+
+on:
+  workflow_dispatch: {}
+  # uncomment to run automatically on every push to the branch
+  # push:
+  #   branches: [ feat/luxury-suite ]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply preview-safe fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p app/api/health
+
+          # 1) Mock chat endpoint (safe even if req.json() fails)
+          cat > app/api/route.ts <<'TS'
+          import { NextResponse } from 'next/server';
+
+          type Message = { content?: string };
+
+          export async function POST(req: Request) {
+            const { messages = [] as Message[] } = await req.json().catch(
+              () => ({ messages: [] as Message[] })
+            );
+            const last = (messages[messages.length - 1]?.content ?? 'How can I help you?').toString();
+
+            return NextResponse.json({
+              id: Date.now().toString(),
+              role: 'assistant',
+              content: `Thanks for your message: "${last}". This is a preview-safe mock; the full AI backend will be wired later.`
+            });
+          }
+          TS
+
+          # 2) Health endpoint (stops 502 probes)
+          cat > app/api/health/route.ts <<'TS'
+          import { NextResponse } from 'next/server';
+          export async function GET() {
+            return NextResponse.json({ ok: true, ts: Date.now() });
+          }
+          TS
+
+          # 3) Security headers (GDPR/NHS friendly)
+          cat > middleware.ts <<'TS'
+          import { NextResponse } from 'next/server';
+          export function middleware() {
+            const res = NextResponse.next();
+            res.headers.set('X-Frame-Options', 'SAMEORIGIN');
+            res.headers.set('X-Content-Type-Options', 'nosniff');
+            res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+            res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+            return res;
+          }
+          TS
+
+          # 4) tsconfig aliases (fix @/ imports)
+          cat > tsconfig.json <<'JSON'
+          {
+            "compilerOptions": {
+              "target": "ES2021",
+              "lib": ["dom", "dom.iterable", "esnext"],
+              "allowJs": true,
+              "skipLibCheck": true,
+              "strict": true,
+              "noEmit": true,
+              "esModuleInterop": true,
+              "module": "esnext",
+              "moduleResolution": "bundler",
+              "resolveJsonModule": true,
+              "isolatedModules": true,
+              "jsx": "preserve",
+              "incremental": true,
+              "plugins": [{ "name": "next" }],
+              "paths": {
+                "@/*": ["./*"],
+                "@/components/*": ["components/*"],
+                "@/features/*": ["features/*"],
+                "@/lib/*": ["lib/*"],
+                "@/types/*": ["types/*"]
+              }
+            },
+            "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+            "exclude": ["node_modules"]
+          }
+          JSON
+
+          # 5) Client-only 3D viewer (only write if missing)
+          mkdir -p features/3d
+          if [ ! -f features/3d/ToothViewer.tsx ]; then
+            cat > features/3d/ToothViewer.tsx <<'TS'
+            'use client';
+            import React, { Suspense, useState } from 'react';
+            import { Canvas } from '@react-three/fiber';
+            import { OrbitControls, Environment, ContactShadows, useGLTF } from '@react-three/drei';
+
+            function ToothModel({ modelPath, autoRotate = true }: { modelPath: string; autoRotate?: boolean }) {
+              const { scene } = useGLTF(modelPath);
+              return <primitive object={scene} rotation={[0, autoRotate ? 0.5 : 0, 0]} scale={2} />;
+            }
+            useGLTF.preload('/models/tooth-sample.glb');
+
+            export function ToothViewer({ modelPath = '/models/tooth-sample.glb' }: { modelPath?: string }) {
+              const [loaded, setLoaded] = useState(false);
+              return (
+                <div className="relative w-full h-[420px] rounded-xl overflow-hidden bg-white">
+                  <Canvas camera={{ position: [0, 0, 5], fov: 50 }} shadows gl={{ antialias: true, alpha: true }} onCreated={() => setLoaded(true)}>
+                    <ambientLight intensity={0.5} />
+                    <Environment preset="studio" />
+                    <Suspense fallback={null}>
+                      <ToothModel modelPath={modelPath} />
+                    </Suspense>
+                    <ContactShadows position={[0, -1.5, 0]} opacity={0.4} scale={10} blur={2} far={4} />
+                    <OrbitControls enablePan={false} maxPolarAngle={Math.PI / 2} />
+                  </Canvas>
+                  {!loaded && <div className="absolute inset-0 flex items-center justify-center bg-white/80" />}
+                </div>
+              );
+            }
+            TS
+          fi
+
+          # 6) Ensure deps present (idempotent)
+          tmp=$(mktemp)
+          jq '
+            .dependencies["@react-three/drei"] //= "^9.107.2" |
+            .dependencies["@react-three/fiber"] //= "^8.17.10" |
+            .dependencies["three"] //= "^0.160.0" |
+            .dependencies["framer-motion"] //= "^10.18.0" |
+            .dependencies["lucide-react"] //= "^0.542.0"
+          ' package.json > "$tmp" && mv "$tmp" package.json
+
+      - name: Commit changes
+        run: |
+          set -euo pipefail
+          git config user.name  "ai24-web-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "fix(build): preview-safe API, security headers, tsconfig aliases, R3F deps"
+          fi
+
+      - name: Push to feat/luxury-suite
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: feat/luxury-suite
