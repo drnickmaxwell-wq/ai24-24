@@ -356,3 +356,33 @@
   }
 }
 
+
+/* Gradient heading class with gold flash on hover */
+@layer components {
+  @keyframes flashGold {
+    0%, 100% {
+      background-image: linear-gradient(to right, var(--brand-magenta), var(--brand-turquoise));
+    }
+    50% {
+      background-image: linear-gradient(to right, var(--brand-gold), var(--brand-gold));
+    }
+  }
+
+  .gradient-heading {
+    background-image: linear-gradient(to right, var(--brand-magenta), var(--brand-turquoise));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gradient-heading:hover {
+    animation: flashGold 0.9s;
+  }
+}
+
+/* Disable flash animation when prefers-reduced-motion is set */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-heading:hover {
+    animation: none;
+  }
+}
