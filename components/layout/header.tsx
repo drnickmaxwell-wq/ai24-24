@@ -21,7 +21,7 @@ const navigationItems = [
       { name: 'Orthodontics', href: '/treatments/orthodontics' },
       { name: 'Implants', href: '/treatments/implants' },
       { name: 'Technology', href: '/treatments/technology' },
-    ],
+    ]
   },
   { name: 'Fees & Plans', href: '/fees' },
   { name: 'Patient Info', href: '/patient-info' },
