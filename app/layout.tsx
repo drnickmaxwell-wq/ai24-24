@@ -97,6 +97,8 @@ export default function RootLayout({
         <link rel="icon" href="/logos/flower-192.png" sizes="192x192" />
         <link rel="apple-touch-icon" href="/logos/flower-192.png" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
         <meta name="theme-color" content="#C2185B" />
         <meta name="msapplication-TileColor" content="#C2185B" />
         <meta name="msapplication-config" content="/browserconfig.xml" />

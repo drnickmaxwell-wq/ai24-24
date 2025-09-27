@@ -45,9 +45,14 @@ const contactInfo = {
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // desktop hover submenu
   const [desktopActiveSubmenu, setDesktopActiveSubmenu] = useState<string | null>(null);
+
+  // mobile: two-step accordion for Treatments
   const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState(false);
   const [mobileOpenSubGroup, setMobileOpenSubGroup] = useState<string | null>(null);
+
   const colors = useBrandColors();
 
   useEffect(() => {
@@ -55,6 +60,16 @@ export function Header() {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // lock body scroll when drawer open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.documentElement.style.overflow = '';
+    }
+    return () => { document.documentElement.style.overflow = ''; };
+  }, [isMobileMenuOpen]);
 
   const submenuVariants = {
     closed: { opacity: 0, y: -10, scale: 0.98 },
@@ -216,6 +231,7 @@ export function Header() {
               size="icon"
               className="lg:hidden"
               onClick={() => setIsMobileMenuOpen((o) => !o)}
+              aria-label="Open menu"
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
@@ -232,16 +248,18 @@ export function Header() {
 
             {/* Panel */}
             <motion.div
-              className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl"
+              className="absolute right-0 top-0 h-full w-[78vw] max-w-[360px] bg-white shadow-2xl"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              role="dialog"
+              aria-modal="true"
             >
               <div className="p-6">
                 {/* Close */}
                 <div className="flex justify-end mb-6">
-                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
                     <X className="w-6 h-6" />
                   </Button>
                 </div>
@@ -311,7 +329,7 @@ export function Header() {
                                                 <Link
                                                   href={`/treatments/${key}/${leaf.slug}`}
                                                   onClick={() => setIsMobileMenuOpen(false)}
-                                                  className="block text-xs px-2 py-1 rounded-md lux-gold-sparkle lux-gradient hover:lux-hover-wash"
+                                                  className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash"
                                                 >
                                                   {leaf.label}
                                                 </Link>

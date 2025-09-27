@@ -535,4 +535,59 @@ body {
     }
   }
 }
+/* ===== Luxury leaf link styles ===== */
+
+/* Bold magenta→turquoise text (baseline) */
+.lux-gradient {
+  background: linear-gradient(90deg, #C2185B 0%, #40C4B4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Metallic gold sweep that runs briefly, then fades */
+.lux-gold-sparkle { position: relative; }
+.lux-gold-sparkle::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(12px 12px at 15% 40%, rgba(212,175,55,.85), rgba(212,175,55,0) 60%),
+    radial-gradient(10px 10px at 70% 65%, rgba(212,175,55,.7), rgba(212,175,55,0) 60%),
+    linear-gradient(90deg, rgba(212,175,55,.55), rgba(212,175,55,0) 45%, rgba(212,175,55,.55));
+  mix-blend-mode: screen;
+  opacity: 0;
+}
+.lux-gold-sparkle:hover::after,
+.lux-gold-sparkle:focus-visible::after {
+  animation: goldSparkleSweep 1.1s ease-out forwards;
+}
+@keyframes goldSparkleSweep {
+  0%   { opacity: 0; transform: translateX(-20%) }
+  30%  { opacity: .95; transform: translateX(15%) }
+  60%  { opacity: .45; transform: translateX(55%) }
+  100% { opacity: 0; transform: translateX(105%) }
+}
+
+/* Soft luxury hover wash */
+.lux-hover-wash {
+  background: linear-gradient(90deg, rgba(194,24,91,.10), rgba(64,196,180,.10));
+  border-radius: 10px;
+}
+
+/* ===== Glass card edge fix (for washed-out tiles) ===== */
+.glass-tile {
+  background: rgba(255,255,255,.82);
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 10px 28px rgba(0,0,0,.10);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+}
+.theme-ink .glass-tile {
+  background: rgba(18,20,26,.66);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 14px 36px rgba(0,0,0,.35);
+}
+
+/* Ensure responsive viewport if any tool stripped it */
+@viewport { width: device-width; zoom: 1.0; }
 
