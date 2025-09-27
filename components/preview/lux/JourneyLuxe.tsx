@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
-import LuxuryCard from '@/components/ui/luxury-card';
 
 const steps = [
   { n: 1, title: '3D Diagnostics', text: 'Digital scans & planning' },
@@ -18,13 +16,11 @@ export default function JourneyLuxe() {
         <h2 className="text-2xl md:text-3xl font-semibold mb-8">Implant Journey</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {steps.map((s) => (
-            <motion.div key={s.n} initial={{ y: 20, opacity: 0 }} whileInView={{ y: 0, opacity: 1 }} viewport={{ once: true }} transition={{ duration: 0.4 }}>
-              <LuxuryCard variant="coastal" hover tilt className="p-6">
-                <div className="text-[var(--turquoise)] font-bold">Step {s.n}</div>
-                <h3 className="mt-1 font-semibold">{s.title}</h3>
-                <p className="text-sm text-[var(--text)]/70 mt-2">{s.text}</p>
-              </LuxuryCard>
-            </motion.div>
+            <div key={s.n} className="p-6 rounded-xl bg-white/80 backdrop-blur-md border border-white/30 shadow-lg">
+              <div className="text-[var(--turquoise)] font-bold">Step {s.n}</div>
+              <h3 className="mt-1 font-semibold">{s.title}</h3>
+              <p className="text-sm text-[var(--text)]/70 mt-2">{s.text}</p>
+            </div>
           ))}
         </div>
       </div>

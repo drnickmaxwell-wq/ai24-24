@@ -14,9 +14,9 @@ export default function FaqLuxe() {
     <section className="relative py-16">
       <div className="mx-auto w-full max-w-[1200px] px-6">
         <h2 className="text-2xl md:text-3xl font-semibold mb-6">FAQs</h2>
-        <div className="divide-y divide-slate-200">
+        <div className="divide-y divide-slate-200 bg-white/80 backdrop-blur-md border border-white/30 rounded-xl">
           {faqs.map((f, i) => (
-            <details key={i} className="py-3">
+            <details key={i} className="px-6 py-4">
               <summary className="cursor-pointer font-medium">{f.q}</summary>
               <p className="mt-2 text-sm text-[var(--text)]/70">{f.a}</p>
             </details>

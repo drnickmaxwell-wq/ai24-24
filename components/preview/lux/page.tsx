@@ -1,8 +1,8 @@
-import FeaturesLuxe from '@/preview/lux/FeaturesLuxe';
-import JourneyLuxe from '@/preview/lux/JourneyLuxe';
-import TestimonialsLuxe from '@/preview/lux/TestimonialsLuxe';
-import FaqLuxe from '@/preview/lux/FaqLuxe';
-import FooterLuxe from '@/preview/lux/FooterLuxe';
+import FeaturesLuxe from '@/components/preview/lux/FeaturesLuxe';
+import JourneyLuxe from '@/components/preview/lux/JourneyLuxe';
+import TestimonialsLuxe from '@/components/preview/lux/TestimonialsLuxe';
+import FaqLuxe from '@/components/preview/lux/FaqLuxe';
+import FooterLuxe from '@/components/preview/lux/FooterLuxe';
 
 export default function Page() {
   return (

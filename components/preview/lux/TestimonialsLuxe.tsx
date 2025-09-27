@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import LuxuryCard from '@/components/ui/luxury-card';
 
 const stories = [
   { name: 'Emma', quote: 'I smiled on the same day — it felt like magic.', video: '/videos/stories/emma.mp4' },
@@ -13,7 +12,7 @@ export default function TestimonialsLuxe() {
     <section className="relative py-16">
       <div className="mx-auto w-full max-w-[1200px] px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {stories.map((s) => (
-          <LuxuryCard key={s.name} variant="gradient" hover shimmer glow className="p-0 overflow-hidden">
+          <div key={s.name} className="rounded-xl overflow-hidden bg-white/80 backdrop-blur-md border border-white/30 shadow-lg">
             <video className="w-full h-64 object-cover" controls preload="none" poster="/videos/stories/poster.jpg">
               <source src={s.video} type="video/mp4" />
             </video>
@@ -21,7 +20,7 @@ export default function TestimonialsLuxe() {
               <h3 className="font-semibold">{s.name}</h3>
               <p className="text-sm text-[var(--text)]/70 mt-1">“{s.quote}”</p>
             </div>
-          </LuxuryCard>
+          </div>
         ))}
       </div>
     </section>
