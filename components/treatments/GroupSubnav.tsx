@@ -3,37 +3,47 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { groups } from '@/app/treatments/groups'; // <-- fixed path
+import { groups, type GroupKey } from '@/app/treatments/groups';
 
-export default function GroupSubnav({ group }: { group: keyof typeof groups }) {
+type Props = { group: GroupKey };
+
+export default function GroupSubnav({ group }: Props) {
   const pathname = usePathname();
-  const cfg = groups[group];
-  if (!cfg) return null;
+  const data = groups[group];
 
   return (
-    <div className="mt-2 space-y-1">
-      {/* Luxe gradient text + 1s metallic gold flash */}
-      <style jsx global>{`
-        .lux-sub { display:block; padding:6px 8px; border-radius:8px; font-size:.95rem; line-height:1.4; }
-        .lux-sub .txt {
-          background-image:linear-gradient(90deg,#C2185B,#40C4B4);
-          -webkit-background-clip:text; background-clip:text; color:transparent; position:relative;
-        }
-        .lux-sub .txt::after {
-          content:''; position:absolute; inset:0;
-          background-image:linear-gradient(90deg,#b8892d,#ffd873 35%,#b8892d 70%);
-          -webkit-background-clip:text; background-clip:text; color:transparent; opacity:0; pointer-events:none;
-        }
-        .lux-sub:hover .txt::after { animation:luxGoldFlash 1100ms ease-in-out; }
-        @keyframes luxGoldFlash { 0%{opacity:0}10%{opacity:1}85%{opacity:1}100%{opacity:0} }
-        .lux-sub.active { background:linear-gradient(90deg,rgba(64,196,180,.08),rgba(194,24,91,.08)); }
-      `}</style>
+    <nav aria-label={`${data.label} sub-navigation`} className="space-y-4">
+      {data.intro && <p className="text-brand-muted">{data.intro}</p>}
 
-      {cfg.items.map((it) => (
-        <Link key={it.href} href={it.href} className={cn('lux-sub', pathname === it.href && 'active')}>
-          <span className="txt">{it.name}</span>
-        </Link>
-      ))}
-    </div>
+      <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {data.items.map((item) => {
+          const active = pathname === item.href;
+          return (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={cn(
+                  "block rounded-xl px-4 py-3 border transition-all",
+                  "bg-white/70 backdrop-blur border-gray-100 hover:shadow-lg",
+                  active
+                    ? "ring-1 ring-brand-gold/40"
+                    : "hover:ring-1 hover:ring-brand-magenta/30"
+                )}
+              >
+                <span
+                  className={cn(
+                    "font-medium bg-clip-text text-transparent",
+                    "bg-[linear-gradient(90deg,#C2185B_0%,#40C4B4_100%)]",
+                    "relative inline-block shimmer-text"
+                  )}
+                >
+                  {item.label}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }
