@@ -329,7 +329,7 @@ export function Header() {
                                                 <Link
                                                   href={`/treatments/${key}/${leaf.slug}`}
                                                   onClick={() => setIsMobileMenuOpen(false)}
-                                                  className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash lux-gradient lux-gold-sparkle hover:lux-hover-wash"
+                                                  className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash"
                                                 >
                                                   {leaf.label}
                                                 </Link>

@@ -593,7 +593,7 @@ body {
 
 
 
-/* ===== Luxury helpers ===== */
+/* ==== LUX HELPERS (added) ==== */
 .lux-gradient{background:linear-gradient(90deg,#C2185B 0%,#40C4B4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .lux-gold-sparkle{position:relative;}
 .lux-gold-sparkle::after{content:"";position:absolute;inset:0;pointer-events:none;background:
