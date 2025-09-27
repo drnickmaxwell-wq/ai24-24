@@ -1,49 +1,62 @@
 'use client';
 
+import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import groups from '@/treatments/groups';
 import { cn } from '@/lib/utils';
-import { groups, type GroupKey } from '@/app/treatments/groups';
 
-type Props = { group: GroupKey };
+type GroupKey = keyof typeof groups;
 
-export default function GroupSubnav({ group }: Props) {
-  const pathname = usePathname();
-  const data = groups[group];
+export default function GroupSubnav({
+  group: initial,
+}: {
+  group?: GroupKey;
+}) {
+  const [open, setOpen] = React.useState<GroupKey | null>(initial ?? null);
 
   return (
-    <nav aria-label={`${data.label} sub-navigation`} className="space-y-4">
-      {data.intro && <p className="text-brand-muted">{data.intro}</p>}
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 p-4 w-[min(100vw,1100px)]">
+      {(Object.keys(groups) as GroupKey[]).map((key) => {
+        const isOpen = open === key;
+        const g = groups[key];
 
-      <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {data.items.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={cn(
-                  "block rounded-xl px-4 py-3 border transition-all",
-                  "bg-white/70 backdrop-blur border-gray-100 hover:shadow-lg",
-                  active
-                    ? "ring-1 ring-brand-gold/40"
-                    : "hover:ring-1 hover:ring-brand-magenta/30"
-                )}
-              >
-                <span
+        return (
+          <div key={key} className="rounded-xl bg-card/70 backdrop-blur p-4 border">
+            <button
+              type="button"
+              className={cn(
+                'w-full text-left text-lg font-semibold tracking-tight',
+                'text-lux-gradient hover:lux-gold-flash transition-[background-position] duration-500'
+              )}
+              onClick={() => setOpen(isOpen ? null : key)}
+              aria-expanded={isOpen}
+              aria-controls={`panel-${key}`}
+            >
+              {g.title}
+            </button>
+
+            <div
+              id={`panel-${key}`}
+              hidden={!isOpen}
+              className="mt-3 grid gap-2"
+            >
+              {g.items.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={item.href}
                   className={cn(
-                    "font-medium bg-clip-text text-transparent",
-                    "bg-[linear-gradient(90deg,#C2185B_0%,#40C4B4_100%)]",
-                    "relative inline-block shimmer-text"
+                    'inline-flex w-max rounded-full px-3 py-1 text-sm',
+                    'text-lux-gradient hover:lux-gold-flash transition-[background-position] duration-500'
                   )}
                 >
-                  {item.label}
-                </span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
