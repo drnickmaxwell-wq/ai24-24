@@ -1,5 +1,5 @@
-import CompleteHomepageFromPhotos from '@/components/real/CompleteHomepageFromPhotos';
+import EnhancedLuxuryHomepage from '@/components/real/EnhancedLuxuryHomepage';
 
 export default function RealInkHomepage() {
-  return <CompleteHomepageFromPhotos theme="ink" />;
+  return <EnhancedLuxuryHomepage theme="ink" />;
 }

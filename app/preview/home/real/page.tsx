@@ -1,5 +1,5 @@
-import CompleteHomepageFromPhotos from '@/components/real/CompleteHomepageFromPhotos';
+import EnhancedLuxuryHomepage from '@/components/real/EnhancedLuxuryHomepage';
 
 export default function RealHomepage() {
-  return <CompleteHomepageFromPhotos theme="light" />;
+  return <EnhancedLuxuryHomepage theme="light" />;
 }
