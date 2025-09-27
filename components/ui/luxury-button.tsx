@@ -4,6 +4,7 @@ import React from 'react';
 import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useBrandColors } from '@/components/providers/theme-provider';
+import { Slot } from '@radix-ui/react-slot';
 
 interface LuxuryButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   children: React.ReactNode;
@@ -40,7 +41,7 @@ export function LuxuryButton({
   ripple = true,
   className,
   href,
-  asChild,
+  asChild = false,
   ...props
 }: LuxuryButtonProps) {
   const colors = useBrandColors();
@@ -133,9 +134,28 @@ export function LuxuryButton({
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-wave" />
       )}
     </>
-  );
+ 
+    const MotionComponent: any = href ? motion.a : motion.button;
 
-  if (href && !asChild) {
+  if (asChild) {
+    return (
+      <MotionComponent
+        className={baseClasses}
+        variants={buttonVariantsMotion}
+        initial="initial"
+        whileHover="hover"
+        whileTap="tap"
+        onClick={handleClick}
+        {...(href ? { href } : {})}
+        {...(props as any)}
+      >
+        <Slot>{buttonContent}</Slot>
+      </MotionComponent>
+    );
+  }
+);
+
+i(f (href) {
     return (
       <motion.a
         href={href}
