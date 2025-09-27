@@ -1,4 +1,3 @@
-// overlay-add-leaf-links.mjs — injects a sub-links list into each group index page
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -23,7 +22,7 @@ const groups = {
     ['3d-printed-veneers','3D Printed Veneers'],
     ['3d-same-day-dentures','3D Same-Day Dentures'],
     ['3d-restorative-dentistry','3D Restorative Dentistry'],
-    ['3d-implants-overview','3D Implants Overview (Guided + Restorations)'],
+    ['3d-implants-overview','3D Implants Overview'],
   ],
   orthodontics: [
     ['spark-aligners','Spark Aligners'],
@@ -50,9 +49,9 @@ for (const group of Object.keys(groups)) {
       .map(([slug, label]) => `        <li><a href="/treatments/${group}/${slug}" className="text-[var(--turquoise)] hover:underline">${label}</a></li>`)
       .join("\n");
     src = src.replace(
-      /<\/main>\)\}\n$/,
-      `  <div className="mt-6">\n    <h2 className="text-lg font-semibold mb-2">More in ${group.replace('-', ' ')}</h2>\n    <ul className="space-y-1">\n${list}\n    </ul>\n  </div>\n</main>)}\n`
-    ).replace("Placeholder page. Content coming shortly.", "Overview of this category. /* SUBLINKS */");
+      /<\/section>\s*<\/main>\s*$/s,
+      `  <div className="mt-6">\n    <h2 className="text-lg font-semibold mb-2">More in ${group.replace('-', ' ')}</h2>\n    <ul className="space-y-1">\n${list}\n    </ul>\n  </div>\n</section>\n</main>\n`
+    ).replace("Overview of this category.", "Overview of this category. /* SUBLINKS */");
     writeFileSync(p, src, "utf-8");
   }
 }

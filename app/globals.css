@@ -4,13 +4,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Tailwind v4 custom variant you already had */
 @custom-variant dark (&:is(.dark *));
 
+/* ------------------------------
+   THEME TOKENS (INLINE)
+   ------------------------------*/
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Map Tailwind design tokens to CSS variables */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -19,11 +26,13 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -40,12 +49,13 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
-  /* St Mary's Brand Colors */
+
+  /* St Mary's Brand Colors (shared palette) */
   --color-brand-magenta: #C2185B;
   --color-brand-turquoise: #40C4B4;
   --color-brand-gold: #D4AF37;
@@ -56,6 +66,101 @@
   --color-brand-gold-light: #FFD700;
   --color-brand-gold-dark: #B8860B;
 }
+
+/* --------------------------------
+   BASE PALETTE (SHARED)
+   --------------------------------*/
+:root {
+  /* Palette */
+  --magenta: #C2185B;
+  --turquoise: #40C4B4;
+  --gold: #D4AF37;
+
+  /* Ink neutrals */
+  --ink-1: #0f1115;
+  --ink-2: #0b0b0e;
+  --ink-3: #12141a;
+
+  /* Defaults (Light) */
+  --bg: #ffffff;
+  --text: #1A1C1F;
+
+  /* FX defaults (can be overridden by theme classes) */
+  --shimmer-strength: 0.50;
+  --wave-amplitude: 0.50;
+  --particle-density: 0.50;
+  --radius-card: 16px;
+  --shadow-elevated: 0 10px 30px rgba(0,0,0,.08);
+  --glow-gold: 0 0 18px rgba(212,175,55,.30);
+
+  /* Convenience aliases for your brand variables */
+  --brand-magenta: var(--magenta);
+  --brand-turquoise: var(--turquoise);
+  --brand-gold: var(--gold);
+}
+
+/* --------------------------------
+   LUXE THEMES
+   --------------------------------*/
+
+/* LUXE LIGHT */
+.theme-lux.theme-light {
+  --bg: #ffffff;
+  --text: #1A1C1F;
+  --shimmer-strength: 0.65;
+  --wave-amplitude: 0.60;
+  --particle-density: 0.60;
+  --shadow-elevated: 0 12px 40px rgba(0,0,0,.10);
+  --radius-card: 18px;
+}
+
+/* LUXE INK (DARK) */
+.theme-lux.theme-ink {
+  --bg: var(--ink-2);
+  --text: #EAEAF2;
+  --shimmer-strength: 0.40;          /* toned down */
+  --wave-amplitude: 0.40;             /* gentler */
+  --particle-density: 0.45;           /* fewer particles */
+  --shadow-elevated: 0 16px 44px rgba(0,0,0,.35);
+  --radius-card: 18px;
+}
+
+/* --------------------------------
+   UTILITIES (USED BY YOUR COMPONENTS)
+   --------------------------------*/
+
+/* shimmer line you use over logos/headings */
+.shimmer {
+  background-size: 200% 100%;
+  animation: shimmerMove 2.2s linear infinite;
+  mask-image: linear-gradient(90deg, transparent 0%, black 20%, black 80%, transparent 100%);
+}
+@keyframes shimmerMove {
+  0% { background-position: -150% 0; }
+  100% { background-position: 150% 0; }
+}
+
+/* subtle breathe effect on logo */
+@keyframes breathe {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+.animate-breathe { animation: breathe 6s ease-in-out infinite; }
+
+/* container helper you already use */
+.container-luxury {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+/* Text + surface helpers bound to tokens */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
 
 :root {
   /* St Mary's Luxury Light Theme */
