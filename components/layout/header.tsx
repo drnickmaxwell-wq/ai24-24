@@ -45,16 +45,9 @@ const contactInfo = {
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // desktop: which top-level item is hovered
   const [desktopActiveSubmenu, setDesktopActiveSubmenu] = useState<string | null>(null);
-
-  // mobile: is the "Treatments" set expanded?
-  const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState<boolean>(false);
-
-  // mobile: which **single** group is open (so we don't list all groups' leaves)
+  const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState(false);
   const [mobileOpenSubGroup, setMobileOpenSubGroup] = useState<string | null>(null);
-
   const colors = useBrandColors();
 
   useEffect(() => {
@@ -258,18 +251,16 @@ export function Header() {
                   {navigationItems.map((item) => {
                     const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
 
-                    // Treat "Treatments" with a 2-step accordion (groups -> leaves)
                     if (item.name === 'Treatments' && hasSub) {
                       return (
                         <div key={item.name}>
-                          {/* Step 1: toggle all groups */}
+                          {/* Step 1: show groups */}
                           <button
                             type="button"
                             className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
                             aria-expanded={mobileTreatmentsOpen}
                             onClick={() => {
                               setMobileTreatmentsOpen((o) => !o);
-                              // when closing the groups, also close leaf list
                               if (mobileTreatmentsOpen) setMobileOpenSubGroup(null);
                             }}
                           >
@@ -277,7 +268,7 @@ export function Header() {
                             <span className={`transition-transform ${mobileTreatmentsOpen ? 'rotate-180' : ''}`}>▾</span>
                           </button>
 
-                          {/* Step 2: show groups; each group toggles its own leaves */}
+                          {/* Groups list */}
                           <AnimatePresence>
                             {mobileTreatmentsOpen && (
                               <motion.div
@@ -305,7 +296,7 @@ export function Header() {
                                         <span className={`transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
                                       </button>
 
-                                      {/* leaves only for this one group */}
+                                      {/* leaves ONLY for this open group */}
                                       <AnimatePresence>
                                         {open && group && (
                                           <motion.ul
@@ -320,8 +311,7 @@ export function Header() {
                                                 <Link
                                                   href={`/treatments/${key}/${leaf.slug}`}
                                                   onClick={() => setIsMobileMenuOpen(false)}
-                                                  className="block text-xs px-2 py-1 rounded-md gradient-leaf gold-shimmer
-                                                    hover:bg-gradient-to-r hover:from-[var(--magenta)]/10 hover:to-[var(--turquoise)]/10"
+                                                  className="block text-xs px-2 py-1 rounded-md lux-gold-sparkle lux-gradient hover:lux-hover-wash"
                                                 >
                                                   {leaf.label}
                                                 </Link>
@@ -340,7 +330,7 @@ export function Header() {
                       );
                     }
 
-                    // Other top-level items (no submenu)
+                    // Others: simple link
                     return (
                       <div key={item.name}>
                         <Link

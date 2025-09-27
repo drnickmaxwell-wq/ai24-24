@@ -441,7 +441,7 @@ body {
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
-  
+
   /* tiny, reusable helpers for luxury drawer leaf links */
 .gradient-leaf {
   background: linear-gradient(90deg, var(--magenta), var(--turquoise));
@@ -453,6 +453,69 @@ body {
 .gold-shimmer {
   text-shadow: 0 0 10px rgba(212,175,55,.25);
 }
+/* ---------- LUXURY LEAF LINK STYLES ---------- */
+
+/* Bold gradient text (not washed out) */
+.lux-gradient {
+  background: linear-gradient(90deg, #C2185B 0%, #40C4B4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Metallic gold sparkle overlay that runs briefly and then fades back to gradient */
+.lux-gold-sparkle {
+  position: relative;
+}
+.lux-gold-sparkle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(12px 12px at 15% 40%, rgba(212,175,55,.75), rgba(212,175,55,0) 60%),
+    radial-gradient(8px 8px at 75% 60%, rgba(212,175,55,.65), rgba(212,175,55,0) 60%),
+    linear-gradient(90deg, rgba(212,175,55,.4), rgba(212,175,55,0) 45%, rgba(212,175,55,.4));
+  opacity: 0;
+  filter: blur(0.2px);
+}
+.lux-gold-sparkle:hover::after,
+.lux-gold-sparkle.lux-sparkle-run::after {
+  animation: goldSparkle 1.1s ease-out forwards;
+}
+@keyframes goldSparkle {
+  0%   { opacity: 0; transform: translateX(-20%) }
+  30%  { opacity: .85; transform: translateX(10%) }
+  60%  { opacity: .45; transform: translateX(50%) }
+  100% { opacity: 0; transform: translateX(100%) }
+}
+
+/* Soft luxury hover wash behind the text */
+.lux-hover-wash {
+  background: linear-gradient(90deg, rgba(194,24,91,.10), rgba(64,196,180,.10));
+  border-radius: 10px;
+}
+
+/* Glass card fixes (AI24 tiles looking “washed out” at edges) */
+.glass-tile {
+  background: rgba(255,255,255,.82);
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 10px 28px rgba(0,0,0,.10);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+}
+.theme-ink .glass-tile {
+  background: rgba(18,20,26,.66);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 14px 36px rgba(0,0,0,.35);
+}
+
+/* Ensure responsive viewport (if it went missing) */
+@viewport {
+  width: device-width;
+  zoom: 1.0;
+}
+
 
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
