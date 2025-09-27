@@ -1,35 +1,36 @@
 'use client';
-
-import dynamic from 'next/dynamic';
-import ShimmerTitle from '@/components/effects/ShimmerTitle';
+import React from 'react';
+import { cn } from '@/lib/utils';
+import WaveBackground from '@/components/effects/WaveBackground';
 import CoastalParticles from '@/components/effects/CoastalParticles';
+import ShimmerText from '@/components/effects/ShimmerText';
 import { LuxuryButton } from '@/components/ui/luxury-button';
 
-const WaveBackground = dynamic(
-  () => import('@/components/fx/WaveBackground').then(m => m.default),
-  { ssr: false }
-);
+export default function HeroLuxe({ variant = 'light' as 'light' | 'ink' }) {
+  const isInk = variant === 'ink';
 
-export default function HeroLuxe() {
   return (
-    <section className="relative overflow-hidden py-24 md:py-32">
-      <WaveBackground amplitude={0.5} />
-      <CoastalParticles />
-      <div className="container-luxury relative z-10">
-        <p className="mb-4 text-sm font-medium text-brand-turquoise/90">
+    <section className={cn('relative overflow-hidden py-20 md:py-28', isInk ? 'bg-[#0f1115] text-white' : 'bg-white')}>
+      <div className="container-luxury relative">
+        <WaveBackground opacity={isInk ? 0.25 : 0.6} />
+        {!isInk && <CoastalParticles />}
+
+        <p className={cn('mb-3 text-sm tracking-wide', isInk ? 'text-brand-turquoise/80' : 'text-brand-turquoise')}>
           AI‑Powered 3D Dentistry
         </p>
-        <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight md:text-6xl">
-          <ShimmerTitle className="leading-tight">Luxury dental care by the sea</ShimmerTitle>
+
+        <h1 className={cn('text-5xl md:text-7xl font-extrabold leading-[1.08] mb-6', isInk ? 'text-white' : 'gradient-text')}>
+          Luxury dental care by <br className="hidden md:block" />
+          <ShimmerText>the sea</ShimmerText>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-brand-muted">
+
+        <p className={cn('max-w-2xl text-lg md:text-xl mb-8', isInk ? 'text-white/75' : 'text-brand-muted')}>
           Advanced 3D dentistry, same‑day veneers & implants, and a calm, patient‑first experience.
         </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <LuxuryButton size="lg">Book a 3D assessment</LuxuryButton>
-          <LuxuryButton variant="outline" size="lg" className="backdrop-blur">
-            Watch patient stories
-          </LuxuryButton>
+
+        <div className="flex flex-wrap gap-4">
+          <LuxuryButton size="lg" shimmer glow>Book a 3D assessment</LuxuryButton>
+          <LuxuryButton size="lg" variant="outline">Watch patient stories</LuxuryButton>
         </div>
       </div>
     </section>

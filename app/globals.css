@@ -355,4 +355,30 @@
     }
   }
 }
+/* === SMH HOTFIX ADDITIONS === */
+
+/* Gradient text (magenta -> turquoise) */
+.gradient-text{
+  background-image: linear-gradient(90deg, var(--color-brand-magenta), var(--color-brand-turquoise));
+  background-size: 200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  color: transparent;
+}
+
+/* Luxury metallic gold shimmer */
+.gold-shimmer{
+  background-image: linear-gradient(90deg, #B8860B, #FFD56E, #B8860B);
+  background-size: 200% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  color: transparent;
+  animation: shimmerGold 1.6s linear infinite;
+}
+@keyframes shimmerGold{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+
+/* Floating dots used by CoastalParticles */
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)}}
+.animate-float{animation: float 6s ease-in-out infinite;}
 

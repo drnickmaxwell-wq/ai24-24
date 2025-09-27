@@ -1,7 +1,11 @@
 'use client';
-import * as React from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
-export default function ShimmerTitle({ children, className }:{children:React.ReactNode,className?:string}){
-  return (<span className={cn('lux-gradient-text relative inline-block', className)}>
-    {children}<span aria-hidden className="lux-gold-shimmer"/></span>);
+
+export default function ShimmerText({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <span className={cn('gradient-text hover:gold-shimmer transition-[background-position] duration-700', className)}>
+      {children}
+    </span>
+  );
 }
