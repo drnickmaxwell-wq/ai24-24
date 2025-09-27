@@ -45,14 +45,9 @@ const contactInfo = {
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // desktop hover submenu
   const [desktopActiveSubmenu, setDesktopActiveSubmenu] = useState<string | null>(null);
-
-  // mobile: two-step accordion for Treatments
   const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState(false);
   const [mobileOpenSubGroup, setMobileOpenSubGroup] = useState<string | null>(null);
-
   const colors = useBrandColors();
 
   useEffect(() => {
@@ -61,13 +56,8 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // lock body scroll when drawer open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.documentElement.style.overflow = '';
-    }
+    document.documentElement.style.overflow = isMobileMenuOpen ? 'hidden' : '';
     return () => { document.documentElement.style.overflow = ''; };
   }, [isMobileMenuOpen]);
 
@@ -78,7 +68,6 @@ export function Header() {
 
   return (
     <>
-      {/* Top Contact Bar */}
       <motion.div
         className="bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white py-2 px-4 text-sm"
         initial={{ y: -50, opacity: 0 }}
@@ -100,102 +89,56 @@ export function Header() {
               </a>
             </div>
           </div>
-
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
               <span>{contactInfo.hours}</span>
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-brand-magenta transition-all duration-300"
-              asChild
-            >
+            <Button size="sm" variant="outline" className="border-white text-white hover:bg-white hover:text-brand-magenta transition-all duration-300" asChild>
               <Link href="/booking">Book Now</Link>
             </Button>
           </div>
         </div>
       </motion.div>
 
-      {/* Main Header */}
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}
-        style={{
-          backgroundColor: isScrolled ? 'rgba(247, 247, 249, 0.95)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(20px)' : 'none',
-          boxShadow: isScrolled ? '0 4px 20px rgba(194, 24, 91, 0.1)' : 'none',
-        }}
+        style={{ backgroundColor: isScrolled ? 'rgba(247, 247, 249, 0.95)' : 'transparent', backdropFilter: isScrolled ? 'blur(20px)' : 'none', boxShadow: isScrolled ? '0 4px 20px rgba(194, 24, 91, 0.1)' : 'none' }}
       >
         <div className="container-luxury">
           <div className="flex items-center justify-between">
-            {/* Logo */}
             <motion.div className="flex items-center" whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }}>
               <Link href="/" className="flex items-center gap-3">
                 <div className="relative">
-                  <Image
-                    src="/logos/horizontal-title-turquoise-512.png"
-                    alt="St Mary's House Dental Care"
-                    width={200}
-                    height={100}
-                    className="h-12 w-auto animate-breathe"
-                    priority
-                  />
+                  <Image src="/logos/horizontal-title-turquoise-512.png" alt="St Mary's House Dental Care" width={200} height={100} className="h-12 w-auto animate-breathe" priority />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent shimmer" />
                 </div>
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation (groups only) */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
               {navigationItems.map((item) => {
                 const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
-
                 return (
-                  <div
-                    key={item.name}
-                    className="relative"
-                    onMouseEnter={() => hasSub && setDesktopActiveSubmenu(item.name)}
-                    onMouseLeave={() => setDesktopActiveSubmenu(null)}
-                  >
+                  <div key={item.name} className="relative" onMouseEnter={() => hasSub && setDesktopActiveSubmenu(item.name)} onMouseLeave={() => setDesktopActiveSubmenu(null)}>
                     {hasSub ? (
-                      <button
-                        type="button"
-                        className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1"
-                        aria-haspopup="true"
-                        aria-expanded={desktopActiveSubmenu === item.name}
-                      >
+                      <button type="button" className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1" aria-haspopup="true" aria-expanded={desktopActiveSubmenu === item.name}>
                         {item.name}
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
                       </button>
                     ) : (
-                      <Link
-                        href={item.href}
-                        className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1"
-                      >
+                      <Link href={item.href} className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1">
                         {item.name}
                         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
                       </Link>
                     )}
-
-                    {/* Desktop submenu (groups only) */}
                     {hasSub && (
                       <AnimatePresence>
                         {desktopActiveSubmenu === item.name && (
-                          <motion.div
-                            className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50"
-                            variants={submenuVariants}
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                            transition={{ duration: 0.2 }}
-                          >
+                          <motion.div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50" variants={submenuVariants} initial="closed" animate="open" exit="closed" transition={{ duration: 0.2 }}>
                             {item.submenu!.map((sub) => (
-                              <Link
-                                key={sub.name}
-                                href={sub.href}
-                                className="block px-4 py-2 text-brand-text hover:text-brand-magenta hover:bg-gray-50 transition-colors duration-200"
-                              >
+                              <Link key={sub.name} href={sub.href} className="block px-4 py-2 text-brand-text hover:text-brand-magenta hover:bg-gray-50 transition-colors duration-200">
                                 {sub.name}
                               </Link>
                             ))}
@@ -210,29 +153,16 @@ export function Header() {
 
             {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-4">
-              <Button
-                variant="outline"
-                className="btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white"
-                asChild
-              >
+              <Button variant="outline" className="btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white" asChild>
                 <Link href="/emergency">Emergency</Link>
               </Button>
-              <Button
-                className="btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta"
-                asChild
-              >
+              <Button className="btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta" asChild>
                 <Link href="/booking">Book Consultation</Link>
               </Button>
             </div>
 
             {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setIsMobileMenuOpen((o) => !o)}
-              aria-label="Open menu"
-            >
+            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setIsMobileMenuOpen((o) => !o)} aria-label="Open menu">
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
           </div>
@@ -243,36 +173,21 @@ export function Header() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div className="fixed inset-0 z-50 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            {/* Backdrop */}
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-
-            {/* Panel */}
-            <motion.div
-              className="absolute right-0 top-0 h-full w-[78vw] max-w-[360px] bg-white shadow-2xl"
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              role="dialog"
-              aria-modal="true"
-            >
+            <motion.div className="absolute right-0 top-0 h-full w-[78vw] max-w-[360px] bg-white shadow-2xl" initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} role="dialog" aria-modal="true">
               <div className="p-6">
-                {/* Close */}
                 <div className="flex justify-end mb-6">
                   <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
                     <X className="w-6 h-6" />
                   </Button>
                 </div>
 
-                {/* Items */}
                 <nav className="space-y-2">
                   {navigationItems.map((item) => {
                     const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
-
                     if (item.name === 'Treatments' && hasSub) {
                       return (
                         <div key={item.name}>
-                          {/* Step 1: show groups */}
                           <button
                             type="button"
                             className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
@@ -286,16 +201,9 @@ export function Header() {
                             <span className={`transition-transform ${mobileTreatmentsOpen ? 'rotate-180' : ''}`}>▾</span>
                           </button>
 
-                          {/* Groups list */}
                           <AnimatePresence>
                             {mobileTreatmentsOpen && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="ml-2 pl-2 border-l border-gray-100"
-                              >
+                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="ml-2 pl-2 border-l border-gray-100">
                                 {item.submenu!.map((sub) => {
                                   const key = sub.href.split('/').pop() as keyof typeof TREATMENT_GROUPS;
                                   const group = TREATMENT_GROUPS[key];
@@ -303,7 +211,6 @@ export function Header() {
 
                                   return (
                                     <div key={sub.href} className="mb-2">
-                                      {/* group row */}
                                       <button
                                         type="button"
                                         aria-expanded={open}
@@ -314,23 +221,12 @@ export function Header() {
                                         <span className={`transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
                                       </button>
 
-                                      {/* leaves ONLY for this open group */}
                                       <AnimatePresence>
                                         {open && group && (
-                                          <motion.ul
-                                            initial={{ height: 0, opacity: 0 }}
-                                            animate={{ height: 'auto', opacity: 1 }}
-                                            exit={{ height: 0, opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="ml-2"
-                                          >
+                                          <motion.ul initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="ml-2">
                                             {group.items.map((leaf) => (
                                               <li key={leaf.slug}>
-                                                <Link
-                                                  href={`/treatments/${key}/${leaf.slug}`}
-                                                  onClick={() => setIsMobileMenuOpen(false)}
-                                                  className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash"
-                                                >
+                                                <Link href={`/treatments/${key}/${leaf.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash">
                                                   {leaf.label}
                                                 </Link>
                                               </li>
@@ -347,15 +243,9 @@ export function Header() {
                         </div>
                       );
                     }
-
-                    // Others: simple link
                     return (
                       <div key={item.name}>
-                        <Link
-                          href={item.href}
-                          className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
+                        <Link href={item.href} className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>
                           {item.name}
                         </Link>
                       </div>
@@ -363,24 +253,15 @@ export function Header() {
                   })}
                 </nav>
 
-                {/* Mobile CTAs */}
                 <div className="mt-8 space-y-4">
-                  <Button
-                    variant="outline"
-                    className="w-full btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white"
-                    asChild
-                  >
+                  <Button variant="outline" className="w-full btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white" asChild>
                     <Link href="/emergency">Emergency Dentist</Link>
                   </Button>
-                  <Button
-                    className="w-full btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta"
-                    asChild
-                  >
+                  <Button className="w-full btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta" asChild>
                     <Link href="/booking">Book Consultation</Link>
                   </Button>
                 </div>
 
-                {/* Contact info */}
                 <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
                   <div className="flex items-center gap-3 text-sm text-brand-muted">
                     <Phone className="w-4 h-4" />

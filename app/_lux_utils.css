@@ -1,0 +1,14 @@
+/* merge the following into your globals if you prefer
+.lux-gradient{background:linear-gradient(90deg,#C2185B 0%,#40C4B4 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.lux-gold-sparkle{position:relative;}
+.lux-gold-sparkle::after{content:"";position:absolute;inset:0;pointer-events:none;background:
+radial-gradient(12px 12px at 15% 40%, rgba(212,175,55,.9), rgba(212,175,55,0) 60%),
+radial-gradient(10px 10px at 70% 65%, rgba(212,175,55,.75), rgba(212,175,55,0) 60%),
+linear-gradient(90deg, rgba(212,175,55,.6), rgba(212,175,55,0) 45%, rgba(212,175,55,.6));
+mix-blend-mode:screen;opacity:0}
+.lux-gold-sparkle:hover::after,.lux-gold-sparkle:focus-visible::after{animation:goldSparkleSweep 1.2s ease-out forwards}
+@keyframes goldSparkleSweep{0%{opacity:0;transform:translateX(-20%)}30%{opacity:.95;transform:translateX(15%)}60%{opacity:.55;transform:translateX(55%)}100%{opacity:0;transform:translateX(105%)}}
+.lux-hover-wash{background:linear-gradient(90deg, rgba(194,24,91,.12), rgba(64,196,180,.12));border-radius:10px;}
+.glass-tile{background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.35);box-shadow:0 10px 28px rgba(0,0,0,.10);backdrop-filter:blur(14px);border-radius:18px;}
+.theme-ink .glass-tile{background:rgba(18,20,26,.66);border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.35);}
+*/
