@@ -1,12 +1,16 @@
 {
   "name": "smh-web-bot",
   "version": "0.1.0",
+ @  "packageManager":@ "pnpm@9.12.0",
+  "engines": { "node": ">=20.9 <21", "pnpm": ">=9" },
+
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack && next-sitemap",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+        "vercel-build": "pnpm install --frozen-lockfile && pnpm build"
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.24",
