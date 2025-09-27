@@ -114,9 +114,7 @@ export function CTASection() {
 
             <h2 className="text-content-headline font-bold text-brand-text mb-6">
               Your Perfect Smile is Just{' '}
-              <span className="bg-gradient-to-r from-brand-magenta to-brand-turquoise bg-clip-text text-transparent">
-                One Click Away
-              </span>
+              <sp<span className="gradient-heading">One Click Away</span>
             </h2>
 
             <p className="text-xl text-brand-muted max-w-3xl mx-auto leading-relaxed mb-8">
