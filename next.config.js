@@ -1,8 +1,11 @@
-/** @type {import("next").NextConfig} */
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  images: { unoptimized: true },
-  eslint: { ignoreDuringBuilds: true },
-  typescript: { ignoreBuildErrors: true },
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    // (Leave Image Optimization on; if you ever export static only,
+    // flip to: unoptimized: true)
+  },
 };
+
 module.exports = nextConfig;

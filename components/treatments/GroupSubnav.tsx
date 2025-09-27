@@ -1,30 +1,32 @@
 'use client';
 
 import Link from 'next/link';
-import { TREATMENT_GROUPS } from './groups';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
+import { groups } from '@/treatments/groups';
 
-export default function GroupSubnav({ group }: { group: keyof typeof TREATMENT_GROUPS }) {
-  const g = TREATMENT_GROUPS[group];
-  if (!g) return null;
-
+export default function GroupSubnav({ group }: { group: keyof typeof groups }) {
+  const pathname = usePathname();
+  const items = groups[group] ?? [];
   return (
-    <aside className="sticky top-24">
-      <div className="text-sm font-semibold mb-2">{g.title}</div>
-      <ul className="space-y-1">
-        {g.items.map((it) => (
-          <li key={it.slug}>
-            <Link
-              href={`/treatments/${group}/${it.slug}`}
-              className="text-sm block px-3 py-2 rounded-md
-                bg-gradient-to-r from-[var(--magenta)]/0 to-[var(--turquoise)]/0
-                hover:from-[var(--magenta)]/10 hover:to-[var(--turquoise)]/10
-                hover:text-[var(--turquoise)]"
-            >
-              {it.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </aside>
+    <nav className="mt-2 space-y-2">
+      {items.map((it) => {
+        const active = pathname === it.href;
+        return (
+          <Link
+            key={it.href}
+            href={it.href}
+            className={cn(
+              'block rounded-md px-3 py-2 text-sm transition-all duration-300 relative',
+              'lux-sub-gradient-text',
+              active && 'ring-1 ring-brand-turquoise/40 bg-white/30 dark:bg-white/5'
+            )}
+          >
+            <span className="relative z-10">{it.label}</span>
+            <span className="lux-sub-gold-shimmer" aria-hidden />
+          </Link>
+        );
+      })}
+    </nav>
   );
 }
