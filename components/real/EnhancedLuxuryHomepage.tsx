@@ -273,11 +273,76 @@ export default function EnhancedLuxuryHomepage({ theme }: EnhancedLuxuryHomepage
               </motion.button>
             </div>
           </div>
-        </div>
-      </header>
+        </section>
 
-      {/* Enhanced Main Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A] overflow-hidden">
+        {/* Main Content */}
+        <main className="relative">
+        {/* Full-Width Hero Section - RESTORED */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A]">
+          {/* Enhanced Particle System */}
+          <div className="absolute inset-0 overflow-hidden">
+            {Array.from({ length: 200 }).map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  boxShadow: '0 0 6px rgba(255, 255, 255, 0.8)',
+                }}
+                animate={{
+                  y: [0, -30, 0],
+                  x: [0, Math.random() * 20 - 10, 0],
+                  opacity: [0.3, 0.8, 0.3],
+                }}
+                transition={{
+                  duration: 3 + Math.random() * 2,
+                  repeat: Infinity,
+                  delay: Math.random() * 2,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Loading Content */}
+          <div className="relative z-10 text-center text-white">
+            {/* Loading Spinner */}
+            <motion.div
+              className="w-16 h-16 border-4 border-white border-t-transparent rounded-full mx-auto mb-8"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            />
+            
+            {/* Loading Text */}
+            <motion.h1
+              className="text-4xl md:text-6xl font-bold mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              Loading Luxury Experience...
+            </motion.h1>
+            
+            {/* Progress Dots */}
+            <div className="flex justify-center space-x-2">
+              {[0, 1, 2].map((i) => (
+                <motion.div
+                  key={i}
+                  className="w-3 h-3 bg-white rounded-full"
+                  animate={{ opacity: [0.3, 1, 0.3] }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Interactive Dental Visualization Section - MOVED DOWN */}
+        <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A]">
         {/* Enhanced Wave Background Image with overlay */}
         <div 
           className="absolute inset-0 opacity-50"

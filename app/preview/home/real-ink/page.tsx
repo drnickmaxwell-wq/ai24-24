@@ -1,5 +1,5 @@
-import EnhancedLuxuryHomepage from '@/components/real/EnhancedLuxuryHomepage';
+import UltimateLuxuryHomepage from '@/components/real/UltimateLuxuryHomepage';
 
 export default function RealInkHomepage() {
-  return <EnhancedLuxuryHomepage theme="ink" />;
+  return <UltimateLuxuryHomepage />;
 }

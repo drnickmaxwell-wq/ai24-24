@@ -1,5 +1,5 @@
-import EnhancedLuxuryHomepage from '@/components/real/EnhancedLuxuryHomepage';
+import ExactScreenshotRecreation from '@/components/real/ExactScreenshotRecreation';
 
 export default function RealHomepage() {
-  return <EnhancedLuxuryHomepage theme="light" />;
+  return <ExactScreenshotRecreation />;
 }
