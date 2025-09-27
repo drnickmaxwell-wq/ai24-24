@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack && next-sitemap",
     "build": "next build --turbopack && next-sitemap",
     "start": "next start",
     "lint": "eslint"
