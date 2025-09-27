@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBrandColors } from '@/components/providers/theme-provider';
-import { TREATMENT_GROUPS } from '@/components/treatments/groups'; // <-- leaf pages for the drawer
+import { TREATMENT_GROUPS } from '@/components/treatments/groups';
 
 type NavItem = {
   name: string;
@@ -45,8 +45,16 @@ const contactInfo = {
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // desktop: which top-level item is hovered
   const [desktopActiveSubmenu, setDesktopActiveSubmenu] = useState<string | null>(null);
-  const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
+
+  // mobile: is the "Treatments" set expanded?
+  const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState<boolean>(false);
+
+  // mobile: which **single** group is open (so we don't list all groups' leaves)
+  const [mobileOpenSubGroup, setMobileOpenSubGroup] = useState<string | null>(null);
+
   const colors = useBrandColors();
 
   useEffect(() => {
@@ -54,11 +62,6 @@ export function Header() {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  const headerVariants = {
-    initial: { y: -100, opacity: 0 },
-    animate: { y: 0, opacity: 1 },
-  } as const;
 
   const submenuVariants = {
     closed: { opacity: 0, y: -10, scale: 0.98 },
@@ -108,11 +111,8 @@ export function Header() {
       </motion.div>
 
       {/* Main Header */}
-      <motion.header
+      <header
         className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}
-        variants={headerVariants}
-        initial="initial"
-        animate="animate"
         style={{
           backgroundColor: isScrolled ? 'rgba(247, 247, 249, 0.95)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(20px)' : 'none',
@@ -228,7 +228,7 @@ export function Header() {
             </Button>
           </div>
         </div>
-      </motion.header>
+      </header>
 
       {/* Mobile Drawer */}
       <AnimatePresence>
@@ -257,85 +257,99 @@ export function Header() {
                 <nav className="space-y-2">
                   {navigationItems.map((item) => {
                     const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
-                    const expanded = mobileOpenGroup === item.name;
 
-                    return (
-                      <div key={item.name}>
-                        {hasSub ? (
-                          <>
-                            {/* Top-level group (tap to expand, not navigate) */}
-                            <button
-                              type="button"
-                              className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
-                              aria-expanded={expanded}
-                              onClick={() => setMobileOpenGroup((g) => (g === item.name ? null : item.name))}
-                            >
-                              <span>{item.name}</span>
-                              <span className={`transition-transform ${expanded ? 'rotate-180' : ''}`}>▾</span>
-                            </button>
+                    // Treat "Treatments" with a 2-step accordion (groups -> leaves)
+                    if (item.name === 'Treatments' && hasSub) {
+                      return (
+                        <div key={item.name}>
+                          {/* Step 1: toggle all groups */}
+                          <button
+                            type="button"
+                            className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
+                            aria-expanded={mobileTreatmentsOpen}
+                            onClick={() => {
+                              setMobileTreatmentsOpen((o) => !o);
+                              // when closing the groups, also close leaf list
+                              if (mobileTreatmentsOpen) setMobileOpenSubGroup(null);
+                            }}
+                          >
+                            <span>{item.name}</span>
+                            <span className={`transition-transform ${mobileTreatmentsOpen ? 'rotate-180' : ''}`}>▾</span>
+                          </button>
 
-                            {/* Expanded groups (6) with leaf links */}
-                            <AnimatePresence>
-                              {expanded && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: 'auto', opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.2 }}
-                                  className="ml-2 pl-2 border-l border-gray-100"
-                                >
-                                  {item.submenu!.map((sub) => {
-                                    const key = sub.href.split('/').pop() as keyof typeof TREATMENT_GROUPS;
-                                    const group = TREATMENT_GROUPS[key];
+                          {/* Step 2: show groups; each group toggles its own leaves */}
+                          <AnimatePresence>
+                            {mobileTreatmentsOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="ml-2 pl-2 border-l border-gray-100"
+                              >
+                                {item.submenu!.map((sub) => {
+                                  const key = sub.href.split('/').pop() as keyof typeof TREATMENT_GROUPS;
+                                  const group = TREATMENT_GROUPS[key];
+                                  const open = mobileOpenSubGroup === key;
 
-                                    return (
-                                      <div key={sub.href} className="mb-2">
-                                        {/* group link */}
-                                        <Link
-                                          href={sub.href}
-                                          className="block py-2 text-brand-text font-medium hover:text-brand-magenta transition-colors"
-                                          onClick={() => setIsMobileMenuOpen(false)}
-                                        >
-                                          {sub.name}
-                                        </Link>
+                                  return (
+                                    <div key={sub.href} className="mb-2">
+                                      {/* group row */}
+                                      <button
+                                        type="button"
+                                        aria-expanded={open}
+                                        className="w-full text-left py-2 font-medium text-brand-text hover:text-brand-magenta transition-colors flex items-center justify-between"
+                                        onClick={() => setMobileOpenSubGroup(open ? null : key)}
+                                      >
+                                        <span>{sub.name}</span>
+                                        <span className={`transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
+                                      </button>
 
-                                        {/* leaf links: small gradient text + gold shimmer */}
-                                        {group && (
-                                          <ul className="ml-2">
+                                      {/* leaves only for this one group */}
+                                      <AnimatePresence>
+                                        {open && group && (
+                                          <motion.ul
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{ height: 'auto', opacity: 1 }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="ml-2"
+                                          >
                                             {group.items.map((leaf) => (
                                               <li key={leaf.slug}>
                                                 <Link
                                                   href={`/treatments/${key}/${leaf.slug}`}
                                                   onClick={() => setIsMobileMenuOpen(false)}
-                                                  className="block text-xs px-2 py-1 rounded-md
-                                                    bg-gradient-to-r from-[var(--magenta)]/0 to-[var(--turquoise)]/0
-                                                    hover:from-[var(--magenta)]/10 hover:to-[var(--turquoise)]/10
-                                                    hover:text-[var(--turquoise)]
-                                                    [text-shadow:0_0_10px_rgba(212,175,55,.25)]"
+                                                  className="block text-xs px-2 py-1 rounded-md gradient-leaf gold-shimmer
+                                                    hover:bg-gradient-to-r hover:from-[var(--magenta)]/10 hover:to-[var(--turquoise)]/10"
                                                 >
                                                   {leaf.label}
                                                 </Link>
                                               </li>
                                             ))}
-                                          </ul>
+                                          </motion.ul>
                                         )}
-                                      </div>
-                                    );
-                                  })}
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </>
-                        ) : (
-                          // Simple leaf page (no submenu)
-                          <Link
-                            href={item.href}
-                            className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100"
-                            onClick={() => setIsMobileMenuOpen(false)}
-                          >
-                            {item.name}
-                          </Link>
-                        )}
+                                      </AnimatePresence>
+                                    </div>
+                                  );
+                                })}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      );
+                    }
+
+                    // Other top-level items (no submenu)
+                    return (
+                      <div key={item.name}>
+                        <Link
+                          href={item.href}
+                          className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
                       </div>
                     );
                   })}
