@@ -3,38 +3,69 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-// IMPORTANT: import from /app/treatments/groups (this was the Vercel error)
-import { groups } from '@/app/treatments/groups';
+import { groups } from '@/app/treatments/groups'; // <-- fixed path
 
 export default function GroupSubnav({ group }: { group: keyof typeof groups }) {
   const pathname = usePathname();
-  const data = groups[group];
-  if (!data) return null;
+  const cfg = groups[group];
+  if (!cfg) return null;
 
   return (
-    <aside className="space-y-3">
-      <h3 className="text-base font-semibold tracking-wide text-brand-text/80">{data.title}</h3>
-
-      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-        {data.items.map((item) => {
-          const href = `/treatments/${group}/${item.slug}`;
-          const active = pathname?.startsWith(href);
-          return (
-            <li key={href}>
-              <Link
-                href={href}
-                className={cn(
-                  'block rounded-md px-3 py-1.5 text-sm transition-all',
-                  'gradient-text hover:gold-shimmer', // luxurious gradient + sparkle on hover
-                  active && 'gold-shimmer'            // active = hold the gold
-                )}
-              >
-                {item.title}
-              </Link>
-            </li>
+    <div className="mt-2 space-y-1">
+      {/* Luxe gradient + gold flash (no need to touch globals.css) */}
+      <style jsx global>{`
+        .lux-sub {
+          display: block;
+          padding: 6px 8px;
+          border-radius: 8px;
+          font-size: 0.95rem;
+          line-height: 1.4;
+        }
+        .lux-sub .txt {
+          background-image: linear-gradient(90deg, #C2185B, #40C4B4);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          position: relative;
+        }
+        .lux-sub .txt::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: linear-gradient(90deg, #b8892d, #ffd873 35%, #b8892d 70%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          opacity: 0;
+          pointer-events: none;
+        }
+        .lux-sub:hover .txt::after {
+          animation: luxGoldFlash 1100ms ease-in-out;
+        }
+        @keyframes luxGoldFlash {
+          0% { opacity: 0; }
+          10% { opacity: 1; }
+          85% { opacity: 1; }
+          100% { opacity: 0; }
+        }
+        .lux-sub.active {
+          background: linear-gradient(
+            90deg,
+            rgba(64,196,180,0.08),
+            rgba(194,24,91,0.08)
           );
-        })}
-      </ul>
-    </aside>
+        }
+      `}</style>
+
+      {cfg.items.map((it) => (
+        <Link
+          key={it.href}
+          href={it.href}
+          className={cn('lux-sub', pathname === it.href && 'active')}
+        >
+          <span className="txt">{it.name}</span>
+        </Link>
+      ))}
+    </div>
   );
 }

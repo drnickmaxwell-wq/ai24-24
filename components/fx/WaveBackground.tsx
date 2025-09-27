@@ -1,30 +1,33 @@
 'use client';
+import React from 'react';
 
-export default function WaveBackground({ amplitude = 0.5 }: { amplitude?: number }) {
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-      style={{
-        maskImage: 'radial-gradient(120% 60% at 50% 0%, #000 0%, transparent 60%)',
-        WebkitMaskImage: 'radial-gradient(120% 60% at 50% 0%, #000 0%, transparent 60%)',
-      }}
-    >
+let Impl: any;
+try {
+  // Prefer your original implementation if it exists:
+  // /components/effects/WaveBackground.tsx
+  // @ts-ignore
+  Impl = require('../effects/WaveBackground').default;
+} catch {
+  // Fallback: a soft luxe gradient so Hero never breaks
+  Impl = function WaveBackground({ amplitude = 0.5 }: { amplitude?: number }) {
+    return (
       <div
-        className="absolute inset-0"
+        aria-hidden
         style={{
+          position: 'absolute',
+          inset: 0,
           background:
-            'radial-gradient(120% 60% at 50% 0%, rgba(64,196,180,0.16), transparent 60%), radial-gradient(120% 60% at 50% 100%, rgba(194,24,91,0.14), transparent 60%)',
-          opacity: 0.9,
+            'radial-gradient(120% 60% at 50% 0%, rgba(64,196,180,0.20), transparent 60%),' +
+            'radial-gradient(120% 60% at 50% 100%, rgba(194,24,91,0.18), transparent 60%)',
+          opacity: 0.35 + amplitude * 0.2,
+          filter: 'blur(20px)',
+          pointerEvents: 'none',
         }}
       />
-      <div
-        className="absolute inset-x-0 -bottom-10 h-[140px] blur-2xl"
-        style={{
-          background: 'linear-gradient(90deg, rgba(194,24,91,0.35), rgba(64,196,180,0.35))',
-          opacity: 0.8 * (0.7 + amplitude * 0.6),
-        }}
-      />
-    </div>
-  );
+    );
+  };
+}
+
+export default function WaveBackground(props: { amplitude?: number }) {
+  return <Impl {...props} />;
 }
