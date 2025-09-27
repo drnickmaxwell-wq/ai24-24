@@ -1,8 +1,14 @@
+'use client';
+
+import HeroLuxe from '@/preview/lux/HeroLuxe';
+import StatsLuxe from '@/preview/lux/StatsLuxe';
+
 export default function Page() {
   return (
-    <main style={{ padding: '2rem' }}>
-      <h1>Luxury Home (Light)</h1>
-      <p>Design preview only. No production impact.</p>
+    <main className="min-h-screen">
+      <HeroLuxe />
+      <StatsLuxe />
+      {/* TODO: FeaturesLuxe, JourneyLuxe, TestimonialsLuxe, FaqLuxe, FooterLuxe */}
     </main>
   );
 }
