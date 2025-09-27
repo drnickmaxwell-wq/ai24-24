@@ -137,7 +137,7 @@ export function Header() {
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation (hover reveals groups; no giant list) */}
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
               {navigationItems.map((item) => {
                 const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
@@ -255,9 +255,10 @@ export function Header() {
 
                 {/* Items */}
                 <nav className="space-y-2">
-                  {navigationItems.map((item, idx) => {
+                  {navigationItems.map((item) => {
                     const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
                     const expanded = mobileOpenGroup === item.name;
+
                     return (
                       <div key={item.name}>
                         {hasSub ? (
