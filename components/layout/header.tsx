@@ -8,7 +8,13 @@ import { Menu, X, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBrandColors } from '@/components/providers/theme-provider';
 
-const navigationItems = [
+type NavItem = {
+  name: string;
+  href: string;
+  submenu?: { name: string; href: string }[];
+};
+
+const navigationItems: NavItem[] = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
   {
@@ -21,7 +27,7 @@ const navigationItems = [
       { name: 'Orthodontics', href: '/treatments/orthodontics' },
       { name: 'Implants', href: '/treatments/implants' },
       { name: 'Technology', href: '/treatments/technology' },
-    ]
+    ],
   },
   { name: 'Fees & Plans', href: '/fees' },
   { name: 'Patient Info', href: '/patient-info' },
@@ -31,49 +37,37 @@ const navigationItems = [
 const contactInfo = {
   phone: '01273 453109',
   email: 'info@smhdental.co.uk',
-  address: 'St Mary\'s House, St Mary\'s Road, Shoreham-by-Sea, West Sussex BN43 5ZA',
-  hours: 'Mon-Fri: 8:00-18:00, Sat: 9:00-15:00'
+  address: "St Mary's House, St Mary's Road, Shoreham-by-Sea, West Sussex BN43 5ZA",
+  hours: 'Mon–Fri: 8:00–18:00, Sat: 9:00–15:00',
 };
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null);
+  const [desktopActiveSubmenu, setDesktopActiveSubmenu] = useState<string | null>(null);
+  const [mobileOpenGroup, setMobileOpenGroup] = useState<string | null>(null);
   const colors = useBrandColors();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const headerVariants = {
     initial: { y: -100, opacity: 0 },
     animate: { y: 0, opacity: 1 },
-    scrolled: {
-      backgroundColor: 'rgba(247, 247, 249, 0.95)',
-      backdropFilter: 'blur(20px)',
-      boxShadow: '0 4px 20px rgba(194, 24, 91, 0.1)',
-    }
-  };
-
-  const mobileMenuVariants = {
-    closed: { opacity: 0, x: '100%' },
-    open: { opacity: 1, x: 0 }
-  };
+  } as const;
 
   const submenuVariants = {
-    closed: { opacity: 0, y: -10, scale: 0.95 },
-    open: { opacity: 1, y: 0, scale: 1 }
-  };
+    closed: { opacity: 0, y: -10, scale: 0.98 },
+    open: { opacity: 1, y: 0, scale: 1 },
+  } as const;
 
   return (
     <>
       {/* Top Contact Bar */}
-      <motion.div 
+      <motion.div
         className="bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white py-2 px-4 text-sm"
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -94,14 +88,15 @@ export function Header() {
               </a>
             </div>
           </div>
+
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
               <span>{contactInfo.hours}</span>
             </div>
-            <Button 
-              size="sm" 
-              variant="outline" 
+            <Button
+              size="sm"
+              variant="outline"
               className="border-white text-white hover:bg-white hover:text-brand-magenta transition-all duration-300"
               asChild
             >
@@ -113,12 +108,10 @@ export function Header() {
 
       {/* Main Header */}
       <motion.header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'py-2' : 'py-4'
-        }`}
+        className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}
         variants={headerVariants}
         initial="initial"
-        animate={isScrolled ? "scrolled" : "animate"}
+        animate="animate"
         style={{
           backgroundColor: isScrolled ? 'rgba(247, 247, 249, 0.95)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(20px)' : 'none',
@@ -128,11 +121,7 @@ export function Header() {
         <div className="container-luxury">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <motion.div
-              className="flex items-center"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
+            <motion.div className="flex items-center" whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }}>
               <Link href="/" className="flex items-center gap-3">
                 <div className="relative">
                   <Image
@@ -148,62 +137,79 @@ export function Header() {
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation (hover reveals groups; no giant list) */}
             <nav className="hidden lg:flex items-center space-x-8">
-              {navigationItems.map((item) => (
-                <div
-                  key={item.name}
-                  className="relative"
-                  onMouseEnter={() => item.submenu && setActiveSubmenu(item.name)}
-                  onMouseLeave={() => setActiveSubmenu(null)}
-                >
-                  <Link
-                    href={item.href}
-                    className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group"
-                  >
-                    {item.name}
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
-                  </Link>
+              {navigationItems.map((item) => {
+                const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
 
-                  {/* Submenu */}
-                  {item.submenu && (
-                    <AnimatePresence>
-                      {activeSubmenu === item.name && (
-                        <motion.div
-                          className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50"
-                          variants={submenuVariants}
-                          initial="closed"
-                          animate="open"
-                          exit="closed"
-                          transition={{ duration: 0.2 }}
-                        >
-                          {item.submenu.map((subitem) => (
-                            <Link
-                              key={subitem.name}
-                              href={subitem.href}
-                              className="block px-4 py-2 text-brand-text hover:text-brand-magenta hover:bg-gray-50 transition-colors duration-200"
-                            >
-                              {subitem.name}
-                            </Link>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  )}
-                </div>
-              ))}
+                return (
+                  <div
+                    key={item.name}
+                    className="relative"
+                    onMouseEnter={() => hasSub && setDesktopActiveSubmenu(item.name)}
+                    onMouseLeave={() => setDesktopActiveSubmenu(null)}
+                  >
+                    {/* If has submenu, render a button to avoid instant navigation */}
+                    {hasSub ? (
+                      <button
+                        type="button"
+                        className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1"
+                        aria-haspopup="true"
+                        aria-expanded={desktopActiveSubmenu === item.name}
+                      >
+                        {item.name}
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1"
+                      >
+                        {item.name}
+                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
+                      </Link>
+                    )}
+
+                    {/* Desktop submenu (groups only) */}
+                    {hasSub && (
+                      <AnimatePresence>
+                        {desktopActiveSubmenu === item.name && (
+                          <motion.div
+                            className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50"
+                            variants={submenuVariants}
+                            initial="closed"
+                            animate="open"
+                            exit="closed"
+                            transition={{ duration: 0.2 }}
+                          >
+                            {item.submenu!.map((sub) => (
+                              <Link
+                                key={sub.name}
+                                href={sub.href}
+                                className="block px-4 py-2 text-brand-text hover:text-brand-magenta hover:bg-gray-50 transition-colors duration-200"
+                              >
+                                {sub.name}
+                              </Link>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    )}
+                  </div>
+                );
+              })}
             </nav>
 
-            {/* Desktop CTA Buttons */}
+            {/* Desktop CTAs */}
             <div className="hidden lg:flex items-center gap-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white"
                 asChild
               >
                 <Link href="/emergency">Emergency</Link>
               </Button>
-              <Button 
+              <Button
                 className="btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta"
                 asChild
               >
@@ -216,7 +222,7 @@ export function Header() {
               variant="ghost"
               size="icon"
               className="lg:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => setIsMobileMenuOpen((o) => !o)}
             >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </Button>
@@ -224,86 +230,94 @@ export function Header() {
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            className="fixed inset-0 z-50 lg:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <motion.div className="fixed inset-0 z-50 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             {/* Backdrop */}
-            <div 
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            
-            {/* Menu Panel */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+
+            {/* Panel */}
             <motion.div
               className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl"
-              variants={mobileMenuVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             >
               <div className="p-6">
-                {/* Close Button */}
+                {/* Close */}
                 <div className="flex justify-end mb-6">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
+                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
                     <X className="w-6 h-6" />
                   </Button>
                 </div>
 
-                {/* Navigation Items */}
-                <nav className="space-y-4">
-                  {navigationItems.map((item, index) => (
-                    <motion.div
-                      key={item.name}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                    >
-                      <Link
-                        href={item.href}
-                        className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                      {item.submenu && (
-                        <div className="ml-4 mt-2 space-y-2">
-                          {item.submenu.map((subitem) => (
-                            <Link
-                              key={subitem.name}
-                              href={subitem.href}
-                              className="block py-2 text-brand-muted hover:text-brand-turquoise transition-colors"
-                              onClick={() => setIsMobileMenuOpen(false)}
+                {/* Items */}
+                <nav className="space-y-2">
+                  {navigationItems.map((item, idx) => {
+                    const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
+                    const expanded = mobileOpenGroup === item.name;
+                    return (
+                      <div key={item.name}>
+                        {hasSub ? (
+                          <>
+                            <button
+                              type="button"
+                              className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
+                              aria-expanded={expanded}
+                              onClick={() => setMobileOpenGroup((g) => (g === item.name ? null : item.name))}
                             >
-                              {subitem.name}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </motion.div>
-                  ))}
+                              <span>{item.name}</span>
+                              <span className={`transition-transform ${expanded ? 'rotate-180' : ''}`}>▾</span>
+                            </button>
+                            <AnimatePresence>
+                              {expanded && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="ml-2 pl-2 border-l border-gray-100"
+                                >
+                                  {item.submenu!.map((sub) => (
+                                    <Link
+                                      key={sub.name}
+                                      href={sub.href}
+                                      className="block py-2 text-brand-muted hover:text-brand-turquoise transition-colors"
+                                      onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                      {sub.name}
+                                    </Link>
+                                  ))}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </>
+                        ) : (
+                          <Link
+                            href={item.href}
+                            className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                          >
+                            {item.name}
+                          </Link>
+                        )}
+                      </div>
+                    );
+                  })}
                 </nav>
 
-                {/* Mobile CTA Buttons */}
+                {/* Mobile CTAs */}
                 <div className="mt-8 space-y-4">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white"
                     asChild
                   >
                     <Link href="/emergency">Emergency Dentist</Link>
                   </Button>
-                  <Button 
+                  <Button
                     className="w-full btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta"
                     asChild
                   >
@@ -311,7 +325,7 @@ export function Header() {
                   </Button>
                 </div>
 
-                {/* Contact Info */}
+                {/* Contact info */}
                 <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
                   <div className="flex items-center gap-3 text-sm text-brand-muted">
                     <Phone className="w-4 h-4" />
@@ -338,4 +352,3 @@ export function Header() {
     </>
   );
 }
-
