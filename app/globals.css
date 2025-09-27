@@ -1,17 +1,358 @@
+/* Google Fonts - Montserrat & Lora */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Lora:wght@400;500;600&display=swap');
 
-:root{--magenta:#C2185B;--turquoise:#40C4B4;--gold:#D4AF37;--ink-2:#0b0b0e;--bg:#fff;--text:#1A1C1F}
-.theme-lux.theme-ink{--bg:var(--ink-2);--text:#EAEAF2}
-body{background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,Arial}
-.container-luxury{max-width:1200px;margin:0 auto;padding:0 1.5rem}
-/* helpers */
-.lux-gradient{background:linear-gradient(90deg,#C2185B 0%,#40C4B4 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lux-gold-sparkle{position:relative}
-.lux-gold-sparkle::after{content:"";position:absolute;inset:0;pointer-events:none;background:
-radial-gradient(12px 12px at 15% 40%, rgba(212,175,55,.9), rgba(212,175,55,0) 60%),
-radial-gradient(10px 10px at 70% 65%, rgba(212,175,55,.75), rgba(212,175,55,0) 60%),
-linear-gradient(90deg, rgba(212,175,55,.6), rgba(212,175,55,0) 45%, rgba(212,175,55,.6));
-mix-blend-mode:screen;opacity:0}
-.lux-gold-sparkle:hover::after,.lux-gold-sparkle:focus-visible::after{animation:goldSparkleSweep 1.2s ease-out forwards}
-@keyframes goldSparkleSweep{0%{opacity:0;transform:translateX(-20%)}30%{opacity:.95;transform:translateX(15%)}60%{opacity:.55;transform:translateX(55%)}100%{opacity:0;transform:translateX(105%)}}
-.glass-tile{background:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.35);box-shadow:0 10px 28px rgba(0,0,0,.10);backdrop-filter:blur(14px);border-radius:18px}
-.theme-lux.theme-ink .glass-tile{background:rgba(18,20,26,.66);border:1px solid rgba(255,255,255,.10);box-shadow:0 14px 36px rgba(0,0,0,.35)}
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  
+  /* St Mary's Brand Colors */
+  --color-brand-magenta: #C2185B;
+  --color-brand-turquoise: #40C4B4;
+  --color-brand-gold: #D4AF37;
+  --color-brand-magenta-light: #E91E63;
+  --color-brand-magenta-dark: #AD1457;
+  --color-brand-turquoise-light: #4DD0E1;
+  --color-brand-turquoise-dark: #00ACC1;
+  --color-brand-gold-light: #FFD700;
+  --color-brand-gold-dark: #B8860B;
+}
+
+:root {
+  /* St Mary's Luxury Light Theme */
+  --radius: 18px;
+  --background: #F7F7F9;
+  --foreground: #1A1C1F;
+  --card: #FFFFFF;
+  --card-foreground: #1A1C1F;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1C1F;
+  --primary: #C2185B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #40C4B4;
+  --secondary-foreground: #FFFFFF;
+  --muted: #6A6F7A;
+  --muted-foreground: #FFFFFF;
+  --accent: #D4AF37;
+  --accent-foreground: #1A1C1F;
+  --destructive: #F44336;
+  --destructive-foreground: #FFFFFF;
+  --border: #E0E0E0;
+  --input: #F0F0F0;
+  --ring: #C2185B;
+  --chart-1: #C2185B;
+  --chart-2: #40C4B4;
+  --chart-3: #D4AF37;
+  --chart-4: #E91E63;
+  --chart-5: #4DD0E1;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1C1F;
+  --sidebar-primary: #C2185B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F7F7F9;
+  --sidebar-accent-foreground: #1A1C1F;
+  --sidebar-border: #E0E0E0;
+  --sidebar-ring: #C2185B;
+  
+  /* Custom brand variables */
+  --brand-magenta: #C2185B;
+  --brand-turquoise: #40C4B4;
+  --brand-gold: #D4AF37;
+  --brand-surface: #FFFFFF;
+  --brand-text: #1A1C1F;
+  --brand-muted: #6A6F7A;
+  --max-width: 1200px;
+}
+
+/* Disable dark mode for luxury light theme */
+.dark {
+  --background: #F7F7F9;
+  --foreground: #1A1C1F;
+  --card: #FFFFFF;
+  --card-foreground: #1A1C1F;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1C1F;
+  --primary: #C2185B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #40C4B4;
+  --secondary-foreground: #FFFFFF;
+  --muted: #6A6F7A;
+  --muted-foreground: #FFFFFF;
+  --accent: #D4AF37;
+  --accent-foreground: #1A1C1F;
+  --destructive: #F44336;
+  --destructive-foreground: #FFFFFF;
+  --border: #E0E0E0;
+  --input: #F0F0F0;
+  --ring: #C2185B;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Lora', Georgia, serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  /* Luxury typography scale */
+  .text-front-headline {
+    font-size: 4.5rem;
+    font-weight: 700;
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+  
+  .text-front-subtitle {
+    font-size: 2.25rem;
+    font-weight: 500;
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+  
+  .text-front-body {
+    font-size: 1.5rem;
+    font-family: 'Lora', Georgia, serif;
+  }
+  
+  .text-content-headline {
+    font-size: 2.25rem;
+    font-weight: 600;
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+  
+  .text-content-subtitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    font-family: 'Montserrat', system-ui, sans-serif;
+  }
+  
+  .text-content-body {
+    font-size: 1.25rem;
+    font-family: 'Lora', Georgia, serif;
+  }
+  
+  /* Mobile responsive typography */
+  @media (max-width: 768px) {
+    .text-front-headline {
+      font-size: 3rem;
+    }
+    
+    .text-front-subtitle {
+      font-size: 1.75rem;
+    }
+    
+    .text-content-headline {
+      font-size: 1.875rem;
+    }
+  }
+}
+
+@layer components {
+  /* Luxury glow effects */
+  .glow-magenta {
+    box-shadow: 0 0 20px rgba(194, 24, 91, 0.25);
+  }
+  
+  .glow-turquoise {
+    box-shadow: 0 0 20px rgba(64, 196, 180, 0.25);
+  }
+  
+  .glow-gold {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+  }
+  
+  .glow-soft {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Shimmer effect */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+  
+  /* Container with max width */
+  .container-luxury {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  /* Coastal button styles */
+  .btn-coastal {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-coastal:hover {
+    transform: translateY(-2px);
+  }
+  
+  .btn-coastal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+  
+  .btn-coastal:hover::before {
+    left: 100%;
+  }
+}
+
+@layer utilities {
+  /* Animation keyframes */
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  @keyframes breathe {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+  
+  @keyframes wave {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  /* Animation utilities */
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+  
+  .animate-breathe {
+    animation: breathe 3s ease-in-out infinite;
+  }
+  
+  .animate-wave {
+    animation: wave 2s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-shimmer,
+    .animate-breathe,
+    .animate-wave,
+    .animate-float {
+      animation: none;
+    }
+    
+    .shimmer::before {
+      display: none;
+    }
+    
+    .btn-coastal:hover {
+      transform: none;
+    }
+  }
+}
+

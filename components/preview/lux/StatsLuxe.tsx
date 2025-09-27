@@ -1,12 +1,22 @@
-
 'use client';
+import React from 'react';
 export default function StatsLuxe(){
-  const stats=[['3D','Printed Veneers'],['Same-day','Implants & Restorations'],['5★','Patient Reviews'],['Calm','Sedation Available']];
-  return (<section style={{padding:'2rem 0'}}>
-    <div className="container-luxury" style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'12px'}}>
-      {stats.map((s,i)=>(<div key={i} className="glass-tile" style={{padding:'16px',textAlign:'center'}}>
-        <div style={{color:'var(--turquoise)',fontWeight:700}}>{s[0]}</div><div style={{opacity:.7}}>{s[1]}</div>
-      </div>))}
-    </div>
-  </section>);
+  const stats=[
+    {value:'3D',label:'Printed Veneers'},
+    {value:'Same-day',label:'Implants & Restorations'},
+    {value:'5★',label:'Patient Reviews'},
+    {value:'Calm',label:'Sedation Available'},
+  ];
+  return (
+    <section className="relative z-10 py-12">
+      <div className="mx-auto w-full max-w-[1200px] px-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+        {stats.map(s=>(
+          <div key={s.label} className="p-6 text-center rounded-xl bg-white/80 backdrop-blur-md border border-white/30 shadow-lg">
+            <div className="text-xl md:text-2xl font-semibold text-[var(--turquoise)]">{s.value}</div>
+            <div className="text-sm text-[var(--text,#1A1C1F)]/70">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }

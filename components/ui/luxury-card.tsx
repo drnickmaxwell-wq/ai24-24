@@ -11,7 +11,6 @@ interface LuxuryCardProps extends Omit<HTMLMotionProps<'div'>, 'children'> {
   glow?: boolean;
   shimmer?: boolean;
   tilt?: boolean;
-  asChild?: boolean;
 }
 
 const cardVariants = {
@@ -22,14 +21,14 @@ const cardVariants = {
   gradient: 'bg-gradient-to-br from-brand-magenta/5 to-brand-turquoise/5 border border-brand-turquoise/20 shadow-lg',
 };
 
-export function LuxuryCard({ children,
+export function LuxuryCard({
+  children,
   variant = 'default',
   hover = true,
   glow = false,
   shimmer = false,
   tilt = false,
   className,
-  asChild,
   ...props
 }: LuxuryCardProps) {
   const baseClasses = cn(
