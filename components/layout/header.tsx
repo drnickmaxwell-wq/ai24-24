@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBrandColors } from '@/components/providers/theme-provider';
+import { TREATMENT_GROUPS } from '@/components/treatments/groups'; // <-- leaf pages for the drawer
 
 type NavItem = {
   name: string;
@@ -137,7 +138,7 @@ export function Header() {
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation (groups only) */}
             <nav className="hidden lg:flex items-center space-x-8">
               {navigationItems.map((item) => {
                 const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
@@ -149,7 +150,6 @@ export function Header() {
                     onMouseEnter={() => hasSub && setDesktopActiveSubmenu(item.name)}
                     onMouseLeave={() => setDesktopActiveSubmenu(null)}
                   >
-                    {/* If has submenu, render a button to avoid instant navigation */}
                     {hasSub ? (
                       <button
                         type="button"
@@ -263,6 +263,7 @@ export function Header() {
                       <div key={item.name}>
                         {hasSub ? (
                           <>
+                            {/* Top-level group (tap to expand, not navigate) */}
                             <button
                               type="button"
                               className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
@@ -272,6 +273,8 @@ export function Header() {
                               <span>{item.name}</span>
                               <span className={`transition-transform ${expanded ? 'rotate-180' : ''}`}>▾</span>
                             </button>
+
+                            {/* Expanded groups (6) with leaf links */}
                             <AnimatePresence>
                               {expanded && (
                                 <motion.div
@@ -281,21 +284,50 @@ export function Header() {
                                   transition={{ duration: 0.2 }}
                                   className="ml-2 pl-2 border-l border-gray-100"
                                 >
-                                  {item.submenu!.map((sub) => (
-                                    <Link
-                                      key={sub.name}
-                                      href={sub.href}
-                                      className="block py-2 text-brand-muted hover:text-brand-turquoise transition-colors"
-                                      onClick={() => setIsMobileMenuOpen(false)}
-                                    >
-                                      {sub.name}
-                                    </Link>
-                                  ))}
+                                  {item.submenu!.map((sub) => {
+                                    const key = sub.href.split('/').pop() as keyof typeof TREATMENT_GROUPS;
+                                    const group = TREATMENT_GROUPS[key];
+
+                                    return (
+                                      <div key={sub.href} className="mb-2">
+                                        {/* group link */}
+                                        <Link
+                                          href={sub.href}
+                                          className="block py-2 text-brand-text font-medium hover:text-brand-magenta transition-colors"
+                                          onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                          {sub.name}
+                                        </Link>
+
+                                        {/* leaf links: small gradient text + gold shimmer */}
+                                        {group && (
+                                          <ul className="ml-2">
+                                            {group.items.map((leaf) => (
+                                              <li key={leaf.slug}>
+                                                <Link
+                                                  href={`/treatments/${key}/${leaf.slug}`}
+                                                  onClick={() => setIsMobileMenuOpen(false)}
+                                                  className="block text-xs px-2 py-1 rounded-md
+                                                    bg-gradient-to-r from-[var(--magenta)]/0 to-[var(--turquoise)]/0
+                                                    hover:from-[var(--magenta)]/10 hover:to-[var(--turquoise)]/10
+                                                    hover:text-[var(--turquoise)]
+                                                    [text-shadow:0_0_10px_rgba(212,175,55,.25)]"
+                                                >
+                                                  {leaf.label}
+                                                </Link>
+                                              </li>
+                                            ))}
+                                          </ul>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
                                 </motion.div>
                               )}
                             </AnimatePresence>
                           </>
                         ) : (
+                          // Simple leaf page (no submenu)
                           <Link
                             href={item.href}
                             className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100"
