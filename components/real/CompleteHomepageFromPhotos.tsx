@@ -4,11 +4,11 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 
-interface FinalHomepageProps {
+interface CompleteHomepageFromPhotosProps {
   theme: 'light' | 'ink';
 }
 
-export default function FinalHomepage({ theme }: FinalHomepageProps) {
+export default function CompleteHomepageFromPhotos({ theme }: CompleteHomepageFromPhotosProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -26,26 +26,30 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Magenta wave patterns for Interactive section
-    const drawMagentaWaves = () => {
+    // Complex wave patterns matching the photo
+    const drawComplexWaves = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       const time = Date.now() * 0.001;
       
-      // Main magenta wave
-      for (let i = 0; i < 60; i++) {
-        const progress = i / 60;
-        const opacity = 0.1 + progress * 0.3;
+      // Multiple wave layers with varying opacity and colors
+      for (let layer = 0; layer < 8; layer++) {
+        const progress = layer / 8;
+        const opacity = 0.05 + progress * 0.15;
         
         ctx.beginPath();
-        ctx.strokeStyle = `hsla(330, 70%, ${40 + progress * 30}%, ${opacity})`;
-        ctx.lineWidth = 1 + progress * 2;
+        ctx.strokeStyle = `hsla(${320 + progress * 40}, 70%, ${50 + progress * 20}%, ${opacity})`;
+        ctx.lineWidth = 0.5 + progress * 1.5;
         
-        const startY = canvas.height * 0.7;
-        const amplitude = 150 + progress * 80;
+        const amplitude = 80 + progress * 120;
+        const frequency = 0.003 + progress * 0.002;
+        const speed = 0.5 + progress * 0.8;
         
-        for (let x = 0; x <= canvas.width; x += 5) {
-          const waveY = startY + Math.sin((x * 0.005) + (time * 1.5) + (progress * Math.PI * 2)) * amplitude;
+        for (let x = 0; x <= canvas.width; x += 3) {
+          const waveY = canvas.height * 0.3 + 
+            Math.sin((x * frequency) + (time * speed) + (progress * Math.PI)) * amplitude +
+            Math.sin((x * frequency * 2) + (time * speed * 1.5)) * (amplitude * 0.3);
+          
           if (x === 0) {
             ctx.moveTo(x, waveY);
           } else {
@@ -54,10 +58,27 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
         }
         ctx.stroke();
       }
+
+      // Diagonal flow lines
+      for (let i = 0; i < 15; i++) {
+        const progress = i / 15;
+        ctx.beginPath();
+        ctx.strokeStyle = `hsla(${180 + progress * 20}, 60%, 60%, ${0.1 + progress * 0.1})`;
+        ctx.lineWidth = 0.5;
+        
+        const startX = -200 + (i * 100);
+        const startY = 100 + (i * 30);
+        const endX = canvas.width + 200;
+        const endY = canvas.height - 100 - (i * 20);
+        
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+      }
     };
 
     const animate = () => {
-      drawMagentaWaves();
+      drawComplexWaves();
       requestAnimationFrame(animate);
     };
 
@@ -80,9 +101,17 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
         <div className="bg-gradient-to-r from-[#C2185B] to-[#40C4B4] text-white py-2 px-6 text-sm">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-6">
-              <span>📞 Emergency: 01273 453109</span>
+              <span>📞 01273 453109</span>
               <span>📍 Shoreham-by-Sea, West Sussex</span>
               <span>🕒 24/7 Emergency Care</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <button className="bg-red-600 text-white px-4 py-1 rounded text-xs font-medium">
+                Emergency: 01273 453109
+              </button>
+              <button className="bg-[#40C4B4] text-white px-4 py-1 rounded text-xs font-medium">
+                Book Consultation
+              </button>
             </div>
           </div>
         </div>
@@ -125,86 +154,11 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
         </div>
       </header>
 
-      {/* NEW: Luxury Gradient Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A]">
-        {/* Floating Particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(30)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                width: `${2 + Math.random() * 3}px`,
-                height: `${2 + Math.random() * 3}px`,
-                background: i % 3 === 0 ? '#D4AF37' : i % 3 === 1 ? '#FFFFFF' : 'rgba(255,255,255,0.5)',
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [-15, 15, -15],
-                x: [-8, 8, -8],
-                opacity: [0.3, 0.8, 0.3],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="relative z-10 text-center">
-          {/* Loading Spinner */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 mx-auto mb-8"
-          >
-            <div className="w-full h-full border-4 border-white/20 border-t-white rounded-full"></div>
-          </motion.div>
-
-          {/* Loading Text */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-white text-3xl md:text-4xl font-medium tracking-wide"
-          >
-            Loading Luxury Experience...
-          </motion.h1>
-
-          {/* Progress Dots */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex items-center justify-center gap-2 mt-6"
-          >
-            {[...Array(3)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.5, 1, 0.5],
-                }}
-                transition={{
-                  duration: 1.5,
-                  repeat: Infinity,
-                  delay: i * 0.2,
-                }}
-                className="w-2 h-2 bg-white/60 rounded-full"
-              />
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* MOVED: Interactive Dental Visualization Section with Wave Background */}
-      <section className="relative min-h-screen flex items-center justify-center px-6 py-24">
+      {/* Main Hero Section - Interactive Dental Visualization */}
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A] overflow-hidden">
         {/* Wave Background Image */}
         <div 
-          className="absolute inset-0 opacity-60"
+          className="absolute inset-0 opacity-40"
           style={{
             backgroundImage: `url('/waves-bg-2560.webp')`,
             backgroundSize: 'cover',
@@ -216,29 +170,30 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
         {/* Animated Canvas Background */}
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 w-full h-full opacity-30 pointer-events-none"
+          className="absolute inset-0 w-full h-full opacity-60 pointer-events-none"
         />
 
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden">
-          {[...Array(50)].map((_, i) => (
+          {[...Array(80)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute rounded-full"
               style={{
-                width: `${2 + Math.random() * 4}px`,
-                height: `${2 + Math.random() * 4}px`,
-                background: i % 4 === 0 ? '#C2185B' : i % 4 === 1 ? '#40C4B4' : i % 4 === 2 ? '#D4AF37' : '#FFFFFF',
+                width: `${2 + Math.random() * 6}px`,
+                height: `${2 + Math.random() * 6}px`,
+                background: i % 5 === 0 ? '#D4AF37' : i % 5 === 1 ? '#40C4B4' : i % 5 === 2 ? '#FFFFFF' : i % 5 === 3 ? 'rgba(255,255,255,0.6)' : '#C2185B',
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
               }}
               animate={{
-                y: [-20, 20, -20],
-                x: [-10, 10, -10],
-                opacity: [0.3, 0.8, 0.3],
+                y: [-30, 30, -30],
+                x: [-15, 15, -15],
+                opacity: [0.3, 1, 0.3],
+                scale: [0.8, 1.2, 0.8],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 4 + Math.random() * 3,
                 repeat: Infinity,
                 delay: Math.random() * 2,
               }}
@@ -246,7 +201,7 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
           ))}
         </div>
 
-        <div className="relative z-10 text-center max-w-6xl mx-auto">
+        <div className="relative z-10 text-center max-w-7xl mx-auto px-6">
           {/* Interactive Technology Badge */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -254,81 +209,96 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
             transition={{ duration: 0.8 }}
             className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30 mb-8"
           >
-            <span className="text-2xl">✨</span>
-            <span className="font-medium text-gray-700">Interactive Technology</span>
+            <span className="text-2xl">⚡</span>
+            <span className="font-medium text-white">3D Technology Showcase</span>
           </motion.div>
 
-          {/* Main Heading */}
-          <motion.h1
+          {/* Main Heading - Interactive Dental Visualization */}
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-6xl md:text-8xl lg:text-9xl font-bold mb-8 leading-tight"
+            className="mb-8"
           >
-            <span className="block bg-gradient-to-r from-[#C2185B] to-[#40C4B4] bg-clip-text text-transparent">
-              Interactive
-            </span>
-            <span className="block text-gray-900">Dental Visualization</span>
-          </motion.h1>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight">
+              <span className="block bg-gradient-to-r from-[#C2185B] to-[#40C4B4] bg-clip-text text-transparent">
+                Interactive
+              </span>
+              <span className="block text-gray-900 mt-2">Dental Visualization</span>
+            </h1>
+          </motion.div>
 
-          {/* Subtitle */}
-          <motion.p
+          {/* Perfect Smile CTA Section */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-xl md:text-2xl mb-12 max-w-4xl mx-auto leading-relaxed text-gray-600"
+            className="mb-12"
           >
-            Explore interactive demos of our cutting-edge dental technology,
-            revolutionizing dental care with AI-3D scanning and precision treatments.
-          </motion.p>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
+              Your Perfect Smile is Just
+            </h2>
+            <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[#40C4B4] to-[#D4AF37] bg-clip-text text-transparent">
+              One Click Away
+            </h2>
+            
+            <p className="text-xl text-white/90 mt-6 mb-8 max-w-3xl mx-auto">
+              Experience the future of cosmetic dentistry with our revolutionary 3D scanning 
+              and award-winning patient care in our stunning seaside location.
+            </p>
 
-          {/* Interactive Demo Card */}
+            {/* Main CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-[#C2185B] to-[#8B1538] text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all flex items-center gap-3"
+              >
+                ▶ Book Free Consultation
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-gradient-to-r from-[#40C4B4] to-[#2D6A6A] text-white rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
+              >
+                Try AI Smile Quiz
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Trust Indicators */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="inline-block"
+            className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto"
           >
-            <div className="relative bg-white/20 backdrop-blur-xl rounded-2xl border border-white/30 p-8 max-w-md mx-auto shadow-xl">
-              <div className="relative aspect-video bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl mb-6 overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-16 h-16 bg-gradient-to-r from-[#C2185B] to-[#40C4B4] rounded-full flex items-center justify-center text-white text-2xl shadow-lg"
-                  >
-                    ▶
-                  </motion.button>
-                </div>
-                
-                {/* Floating Elements */}
-                <div className="absolute inset-0">
-                  {[...Array(8)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 rounded-full bg-[#40C4B4]"
-                      style={{
-                        left: `${20 + i * 10}%`,
-                        top: `${30 + Math.sin(i) * 20}%`,
-                      }}
-                      animate={{
-                        opacity: [0, 1, 0],
-                        scale: [0, 1.5, 0],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.3,
-                      }}
-                    />
-                  ))}
-                </div>
+            {/* 24/7 Emergency */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-[#D4AF37] to-[#FFD700] rounded-full flex items-center justify-center text-white text-2xl">
+                📞
               </div>
+              <h3 className="font-bold text-white text-lg mb-2">24/7 Emergency</h3>
+              <p className="text-white/80 text-sm">Always here when you need us</p>
+            </div>
 
-              <div className="text-left">
-                <h3 className="font-semibold mb-2 text-gray-800">Intraoral Scanning</h3>
-                <p className="text-sm text-gray-600">Experience our revolutionary 3D scanning technology</p>
+            {/* CQC Outstanding Rating */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-[#40C4B4] to-[#2D6A6A] rounded-full flex items-center justify-center text-white text-2xl">
+                📅
               </div>
+              <h3 className="font-bold text-white text-lg mb-2">CQC Outstanding Rating</h3>
+              <p className="text-white/80 text-sm">Award-winning patient care</p>
+            </div>
+
+            {/* 98% Patient Satisfaction */}
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-[#C2185B] to-[#8B1538] rounded-full flex items-center justify-center text-white text-2xl">
+                ⭐
+              </div>
+              <h3 className="font-bold text-white text-lg mb-2">98% Patient Satisfaction</h3>
+              <p className="text-white/80 text-sm">Exceptional results guaranteed</p>
             </div>
           </motion.div>
         </div>
@@ -359,19 +329,19 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-center"
+              className="text-center group"
             >
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#40C4B4] to-[#8B5A96] flex items-center justify-center text-white text-3xl shadow-xl">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#40C4B4] to-[#8B5A96] flex items-center justify-center text-white text-4xl shadow-2xl group-hover:scale-110 transition-transform">
                 🦷
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">3D Digital Dentistry</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Experience the future with our cutting-edge 3D scanning and treatment planning.
+                Experience the future with our cutting-edge 3D scanning and treatment planning technology.
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-gradient-to-r from-[#C2185B] to-[#40C4B4] text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
+                className="px-8 py-3 bg-gradient-to-r from-[#40C4B4] to-[#8B5A96] text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
               >
                 Explore 3D Tech
               </motion.button>
@@ -382,9 +352,9 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-center"
+              className="text-center group"
             >
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#40C4B4] to-[#D4AF37] flex items-center justify-center text-white text-3xl shadow-xl">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#40C4B4] to-[#D4AF37] flex items-center justify-center text-white text-4xl shadow-2xl group-hover:scale-110 transition-transform">
                 ✨
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">Porcelain Veneers</h3>
@@ -405,14 +375,14 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-center"
+              className="text-center group"
             >
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#C2185B] flex items-center justify-center text-white text-3xl shadow-xl">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#C2185B] flex items-center justify-center text-white text-4xl shadow-2xl group-hover:scale-110 transition-transform">
                 🦷
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900">Dental Implants</h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Restore your confidence with our premium dental implant solutions.
+                Restore your confidence with our premium dental implant solutions and expertise.
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -426,8 +396,8 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
         </div>
       </section>
 
-      {/* NEW: Technology Section (from home-page1.webp) */}
-      <section className="relative py-24 px-6 bg-gradient-to-br from-[#C2185B] via-[#8B5A96] to-[#40C4B4]">
+      {/* Technology Section */}
+      <section className="relative py-24 px-6 bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A]">
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(40)].map((_, i) => (
@@ -491,7 +461,7 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
                   </div>
                   <h3 className="text-white font-semibold text-lg">AI-Powered Diagnosis</h3>
                 </div>
-                <p className="text-white/80">Advanced AI analyzes your dental health instantly</p>
+                <p className="text-white/80">Advanced AI analyzes your dental health instantly with precision accuracy</p>
               </motion.div>
 
               {/* Smile Preview Technology */}
@@ -507,7 +477,7 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
                   </div>
                   <h3 className="text-white font-semibold text-lg">Smile Preview Technology</h3>
                 </div>
-                <p className="text-white/80">See your perfect smile before treatment begins</p>
+                <p className="text-white/80">See your perfect smile before treatment begins with our advanced modeling</p>
               </motion.div>
             </div>
 
@@ -539,7 +509,7 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
 
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-white mb-2">3D Intraoral Scanning</h3>
-                <p className="text-white/80 mb-6">Interactive demo loading...</p>
+                <p className="text-white/80 mb-6">Interactive demo showcasing our advanced technology</p>
                 
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -568,8 +538,8 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
         </div>
       </section>
 
-      {/* NEW: Sophisticated Footer */}
-      <footer className="relative bg-gradient-to-br from-[#C2185B] via-[#8B5A96] to-[#40C4B4] text-white py-16">
+      {/* Footer */}
+      <footer className="relative bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] to-[#2D6A6A] text-white py-16">
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(30)].map((_, i) => (

@@ -1,7 +1,5 @@
-'use client';
+import CompleteHomepageFromPhotos from '@/components/real/CompleteHomepageFromPhotos';
 
-import FinalHomepage from '@/components/real/FinalHomepage';
-
-export default function RealHomepagePage() {
-  return <FinalHomepage theme="light" />;
+export default function RealHomepage() {
+  return <CompleteHomepageFromPhotos theme="light" />;
 }

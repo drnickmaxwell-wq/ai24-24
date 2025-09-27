@@ -1,7 +1,5 @@
-'use client';
+import CompleteHomepageFromPhotos from '@/components/real/CompleteHomepageFromPhotos';
 
-import FinalHomepage from '@/components/real/FinalHomepage';
-
-export default function RealHomepageInkPage() {
-  return <FinalHomepage theme="ink" />;
+export default function RealInkHomepage() {
+  return <CompleteHomepageFromPhotos theme="ink" />;
 }
