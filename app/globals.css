@@ -442,6 +442,18 @@ body {
     animation: float 3s ease-in-out infinite;
   }
   
+  /* tiny, reusable helpers for luxury drawer leaf links */
+.gradient-leaf {
+  background: linear-gradient(90deg, var(--magenta), var(--turquoise));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-shimmer {
+  text-shadow: 0 0 10px rgba(212,175,55,.25);
+}
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .animate-shimmer,
