@@ -126,7 +126,7 @@ export default function FinalHomepage({ theme }: FinalHomepageProps) {
       </header>
 
       {/* NEW: Luxury Gradient Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#C2185B] via-[#8B5A96] to-[#40C4B4]">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#8B1538] via-[#6B2C5C] via-[#4A5B7A] to-[#2D7D7A]">
         {/* Floating Particles */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(30)].map((_, i) => (
