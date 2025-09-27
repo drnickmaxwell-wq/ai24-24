@@ -1,8 +1,2 @@
-/** @type {import("next").NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  images: { unoptimized: true },             // no image optimizer on export
-  eslint: { ignoreDuringBuilds: true },      // keep builds green while iterating
-  typescript: { ignoreBuildErrors: true },
-};
-module.exports = nextConfig;
+/** @type {import('next').NextConfig} */
+module.exports={reactStrictMode:true,images:{unoptimized:true},eslint:{ignoreDuringBuilds:true},typescript:{ignoreBuildErrors:true}};
