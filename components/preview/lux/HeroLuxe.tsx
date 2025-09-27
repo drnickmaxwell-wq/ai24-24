@@ -3,20 +3,32 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import ShimmerTitle from '@/components/effects/ShimmerText';
-import CoastalParticles from '@/components/effects/CoastalParticles';
-import WaveBackground from '@/components/fx/WaveBackground';
 import SparkleButton from '@/components/effects/SparkleButton';
+
+// Use whichever you have:
+let WaveBackground: any;
+try {
+  WaveBackground = require('@/components/fx/WaveBackground').default;
+} catch {
+  WaveBackground = require('@/components/effects/WebGLWaves').default;
+}
+
+// Fallback particles (no-op) if missing
+let CoastalParticles: any;
+try {
+  CoastalParticles = require('@/components/effects/CoastalParticles').default;
+} catch {
+  CoastalParticles = () => null;
+}
 
 export default function HeroLuxe() {
   return (
     <section className="relative overflow-hidden">
-      {/* Waves + particles */}
       <div className="absolute inset-0 pointer-events-none">
         <WaveBackground amplitude={0.6} speed={0.25} />
         <CoastalParticles density="medium" />
       </div>
 
-      {/* Video */}
       <div className="relative z-10">
         <video
           className="w-full h-[70vh] object-cover"
@@ -27,7 +39,6 @@ export default function HeroLuxe() {
           <source src="/videos/hero/hero.mp4" type="video/mp4" />
         </video>
 
-        {/* Overlay copy + CTAs */}
         <div className="absolute inset-0 flex items-center">
           <div className="mx-auto w-full max-w-[1200px] px-6">
             <div className="max-w-3xl">
@@ -58,7 +69,6 @@ export default function HeroLuxe() {
         </div>
       </div>
 
-      {/* Fade to next section */}
       <div className="h-24 bg-gradient-to-b from-transparent to-white dark:to-[var(--ink-2)]" />
     </section>
   );
