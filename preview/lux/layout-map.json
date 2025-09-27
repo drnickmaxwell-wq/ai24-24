@@ -1,0 +1,83 @@
+{
+  "luxeHomepage": {
+    "sections": [
+      {
+        "id": "hero",
+        "name": "Interactive Dental Visualization Hero",
+        "order": 1,
+        "spacing": "py-0",
+        "description": "Full-width hero with gradient background, floating particles, and 'Interactive Dental Visualization' heading with flowing line patterns",
+        "breakpoints": {
+          "mobile": "h-screen",
+          "desktop": "h-screen"
+        },
+        "effects": ["particles", "gradients", "flowing-lines", "shimmer-text"]
+      },
+      {
+        "id": "cta-primary",
+        "name": "Perfect Smile CTA",
+        "order": 2,
+        "spacing": "py-24",
+        "description": "Main CTA section with 'Your Perfect Smile is Just One Click Away' heading and gradient background",
+        "breakpoints": {
+          "mobile": "px-6",
+          "desktop": "px-12"
+        },
+        "effects": ["wave-patterns", "floating-particles", "gradient-text"]
+      },
+      {
+        "id": "treatments",
+        "name": "Luxury Coastal Dentistry",
+        "order": 3,
+        "spacing": "py-32",
+        "description": "Treatment cards with circular gradient icons: 3D Digital Dentistry, Porcelain Veneers, Dental Implants",
+        "breakpoints": {
+          "mobile": "grid-cols-1",
+          "desktop": "grid-cols-3"
+        },
+        "effects": ["glow-cards", "hover-animations", "gradient-buttons"]
+      },
+      {
+        "id": "stats",
+        "name": "Practice Statistics",
+        "order": 4,
+        "spacing": "py-16",
+        "description": "Statistics bar with CQC Outstanding, Same-Day Appointments, 98% Patient Satisfaction",
+        "breakpoints": {
+          "mobile": "flex-col",
+          "desktop": "flex-row"
+        },
+        "effects": ["counter-animations", "icon-highlights"]
+      }
+    ],
+    "globalEffects": {
+      "particles": {
+        "count": 80,
+        "colors": ["#C2185B", "#40C4B4", "#D4AF37"],
+        "animation": "floating"
+      },
+      "gradients": {
+        "primary": "linear-gradient(135deg, #C2185B 0%, #40C4B4 100%)",
+        "secondary": "linear-gradient(135deg, #40C4B4 0%, #D4AF37 100%)",
+        "hero": "linear-gradient(135deg, #C2185B 0%, #40C4B4 50%, #D4AF37 100%)"
+      },
+      "typography": {
+        "hero": "text-6xl md:text-8xl font-bold",
+        "section": "text-4xl md:text-6xl font-bold",
+        "body": "text-xl md:text-2xl"
+      }
+    },
+    "themes": {
+      "light": {
+        "background": "#F8FAFC",
+        "text": "#1A202C",
+        "glass": "rgba(255, 255, 255, 0.1)"
+      },
+      "ink": {
+        "background": "#0B1020",
+        "text": "#FFFFFF",
+        "glass": "rgba(255, 255, 255, 0.05)"
+      }
+    }
+  }
+}
