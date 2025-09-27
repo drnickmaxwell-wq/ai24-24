@@ -1,35 +1,24 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Menu, X, Phone, Mail, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useBrandColors } from '@/components/providers/theme-provider';
 import { TREATMENT_GROUPS } from '@/components/treatments/groups';
+import './header.menu.css';
 
 type NavItem = {
   name: string;
   href: string;
-  submenu?: { name: string; href: string }[];
 };
 
-const navigationItems: NavItem[] = [
+const BASE_ITEMS: NavItem[] = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/about' },
-  {
-    name: 'Treatments',
-    href: '/treatments',
-    submenu: [
-      { name: 'General Dentistry', href: '/treatments/general' },
-      { name: 'Cosmetic Dentistry', href: '/treatments/cosmetic' },
-      { name: '3D Dentistry', href: '/treatments/3d-dentistry' },
-      { name: 'Orthodontics', href: '/treatments/orthodontics' },
-      { name: 'Implants', href: '/treatments/implants' },
-      { name: 'Technology', href: '/treatments/technology' },
-    ],
-  },
+  { name: 'Treatments', href: '#' }, // special handling
   { name: 'Fees & Plans', href: '/fees' },
   { name: 'Patient Info', href: '/patient-info' },
   { name: 'Contact', href: '/contact' },
@@ -38,17 +27,36 @@ const navigationItems: NavItem[] = [
 const contactInfo = {
   phone: '01273 453109',
   email: 'info@smhdental.co.uk',
-  address: "St Mary's House, St Mary's Road, Shoreham-by-Sea, West Sussex BN43 5ZA",
   hours: 'Mon–Fri: 8:00–18:00, Sat: 9:00–15:00',
+};
+
+const groupOrder: Array<keyof typeof TREATMENT_GROUPS> = [
+  'general','cosmetic','3d-dentistry','orthodontics','implants','technology'
+];
+
+const groupDisplay: Record<string, string> = {
+  general: 'General',
+  cosmetic: 'Cosmetic',
+  '3d-dentistry': '3D Dentistry',
+  orthodontics: 'Orthodontics',
+  implants: 'Implants',
+  technology: 'Technology',
 };
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [desktopActiveSubmenu, setDesktopActiveSubmenu] = useState<string | null>(null);
+
+  // Desktop flyout
+  const [desktopFlyoutOpen, setDesktopFlyoutOpen] = useState(false);
+  const [desktopActiveGroup, setDesktopActiveGroup] = useState<keyof typeof TREATMENT_GROUPS | null>(null);
+  const flyoutRef = useRef<HTMLDivElement | null>(null);
+
+  // Mobile drawer: accordion for Treatments
   const [mobileTreatmentsOpen, setMobileTreatmentsOpen] = useState(false);
-  const [mobileOpenSubGroup, setMobileOpenSubGroup] = useState<string | null>(null);
-  const colors = useBrandColors();
+  const [mobileOpenGroup, setMobileOpenGroup] = useState<keyof typeof TREATMENT_GROUPS | null>(null);
+
+  const colors = useBrandColors?.();
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
@@ -57,17 +65,32 @@ export function Header() {
   }, []);
 
   useEffect(() => {
+    // Prevent body scroll when drawer is open
     document.documentElement.style.overflow = isMobileMenuOpen ? 'hidden' : '';
     return () => { document.documentElement.style.overflow = ''; };
   }, [isMobileMenuOpen]);
 
+  // Close if clicking outside the desktop flyout
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (!flyoutRef.current) return;
+      if (!flyoutRef.current.contains(e.target as Node)) {
+        setDesktopFlyoutOpen(false);
+        setDesktopActiveGroup(null);
+      }
+    };
+    if (desktopFlyoutOpen) document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [desktopFlyoutOpen]);
+
   const submenuVariants = {
-    closed: { opacity: 0, y: -10, scale: 0.98 },
-    open: { opacity: 1, y: 0, scale: 1 },
-  } as const;
+    closed: { opacity: 0, y: -8, scale: 0.98, pointerEvents: 'none' as const },
+    open:   { opacity: 1, y: 0,    scale: 1,    pointerEvents: 'auto' as const },
+  };
 
   return (
     <>
+      {/* Top contact strip */}
       <motion.div
         className="bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white py-2 px-4 text-sm"
         initial={{ y: -50, opacity: 0 }}
@@ -94,197 +117,266 @@ export function Header() {
               <Clock className="w-4 h-4" />
               <span>{contactInfo.hours}</span>
             </div>
-            <Button size="sm" variant="outline" className="border-white text-white hover:bg-white hover:text-brand-magenta transition-all duration-300" asChild>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-white text-white hover:bg-white hover:text-brand-magenta transition-all duration-300"
+              asChild
+            >
               <Link href="/booking">Book Now</Link>
             </Button>
           </div>
         </div>
       </motion.div>
 
+      {/* Sticky header */}
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'py-2' : 'py-4'}`}
-        style={{ backgroundColor: isScrolled ? 'rgba(247, 247, 249, 0.95)' : 'transparent', backdropFilter: isScrolled ? 'blur(20px)' : 'none', boxShadow: isScrolled ? '0 4px 20px rgba(194, 24, 91, 0.1)' : 'none' }}
+        style={{
+          backgroundColor: isScrolled ? 'rgba(247, 247, 249, 0.95)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(20px)' : 'none',
+          boxShadow: isScrolled ? '0 4px 20px rgba(194, 24, 91, 0.08)' : 'none'
+        }}
       >
         <div className="container-luxury">
           <div className="flex items-center justify-between">
             <motion.div className="flex items-center" whileHover={{ scale: 1.05 }} transition={{ type: 'spring', stiffness: 300 }}>
               <Link href="/" className="flex items-center gap-3">
                 <div className="relative">
-                  <Image src="/logos/horizontal-title-turquoise-512.png" alt="St Mary's House Dental Care" width={200} height={100} className="h-12 w-auto animate-breathe" priority />
+                  <Image
+                    src="/logos/horizontal-title-turquoise-512.png"
+                    alt="St Mary's House Dental Care"
+                    width={200}
+                    height={100}
+                    className="h-12 w-auto"
+                    priority
+                  />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent shimmer" />
                 </div>
               </Link>
             </motion.div>
 
-            {/* Desktop Navigation */}
+            {/* Desktop navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
-              {navigationItems.map((item) => {
-                const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
+              {BASE_ITEMS.map((item) => {
+                if (item.name !== 'Treatments') {
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="hover:text-brand-magenta transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise rounded-sm px-0.5"
+                    >
+                      {item.name}
+                    </Link>
+                  );
+                }
+                // Special: Treatments control
                 return (
-                  <div key={item.name} className="relative" onMouseEnter={() => hasSub && setDesktopActiveSubmenu(item.name)} onMouseLeave={() => setDesktopActiveSubmenu(null)}>
-                    {hasSub ? (
-                      <button type="button" className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1" aria-haspopup="true" aria-expanded={desktopActiveSubmenu === item.name}>
-                        {item.name}
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
-                      </button>
-                    ) : (
-                      <Link href={item.href} className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1">
-                        {item.name}
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
-                      </Link>
-                    )}
-                    {hasSub && (
-                      <AnimatePresence>
-                        {desktopActiveSubmenu === item.name && (
-                          <motion.div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50" variants={submenuVariants} initial="closed" animate="open" exit="closed" transition={{ duration: 0.2 }}>
-                            {item.submenu!.map((sub) => (
-                              <Link key={sub.name} href={sub.href} className="block px-4 py-2 text-brand-text hover:text-brand-magenta hover:bg-gray-50 transition-colors duration-200">
-                                {sub.name}
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    )}
+                  <div
+                    key="Treatments"
+                    className="relative"
+                    onMouseEnter={() => setDesktopFlyoutOpen(true)}
+                    onFocus={() => setDesktopFlyoutOpen(true)}
+                    onMouseLeave={() => { setDesktopFlyoutOpen(false); setDesktopActiveGroup(null); }}
+                  >
+                    <button
+                      type="button"
+                      className="btn-coastal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise rounded-sm px-0.5"
+                      aria-haspopup="menu"
+                      aria-expanded={desktopFlyoutOpen}
+                      aria-controls="treatments-flyout"
+                      onClick={(e) => { e.preventDefault(); setDesktopFlyoutOpen((v) => !v); }}
+                    >
+                      Treatments
+                    </button>
+
+                    <AnimatePresence>
+                      {desktopFlyoutOpen && (
+                        <motion.div
+                          id="treatments-flyout"
+                          ref={flyoutRef}
+                          role="menu"
+                          initial="closed"
+                          animate="open"
+                          exit="closed"
+                          variants={submenuVariants}
+                          className="absolute left-1/2 -translate-x-1/2 mt-3 min-w-[680px] rounded-2xl border border-white/40 shadow-xl glass-tile p-5"
+                          style={{ backdropFilter: 'blur(18px)' }}
+                        >
+                          {/* Groups view */}
+                          {!desktopActiveGroup && (
+                            <div className="grid grid-cols-3 gap-4">
+                              {groupOrder.map((g) => {
+                                const title = groupDisplay[g] ?? TREATMENT_GROUPS[g].title;
+                                return (
+                                  <button
+                                    key={g}
+                                    type="button"
+                                    className="text-left px-3 py-2 rounded-lg hover:bg-white/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise/60"
+                                    onClick={() => setDesktopActiveGroup(g)}
+                                  >
+                                    <div className="text-sm opacity-70">Group</div>
+                                    <div className="text-lg font-semibold lux-gradient">{title}</div>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {/* Leaves view */}
+                          {desktopActiveGroup && (
+                            <div>
+                              <div className="mb-3 flex items-center justify-between">
+                                <button
+                                  type="button"
+                                  className="text-sm hover:text-brand-magenta focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise rounded-sm"
+                                  onClick={() => setDesktopActiveGroup(null)}
+                                >
+                                  ← Back to groups
+                                </button>
+                                <div className="text-sm opacity-70">
+                                  {groupDisplay[desktopActiveGroup] ?? TREATMENT_GROUPS[desktopActiveGroup].title}
+                                </div>
+                              </div>
+                              <ul className="grid grid-cols-2 gap-2">
+                                {TREATMENT_GROUPS[desktopActiveGroup].items.map((leaf) => (
+                                  <li key={leaf.slug}>
+                                    <Link
+                                      href={`/treatments/${leaf.slug}`}
+                                      className="menu-leaf menu-leaf-gradient menu-gold-shimmer text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise/60 rounded-sm"
+                                    >
+                                      {leaf.label}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 );
               })}
             </nav>
 
-            {/* Desktop CTAs */}
-            <div className="hidden lg:flex items-center gap-4">
-              <Button variant="outline" className="btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white" asChild>
-                <Link href="/emergency">Emergency</Link>
-              </Button>
-              <Button className="btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta" asChild>
-                <Link href="/booking">Book Consultation</Link>
-              </Button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setIsMobileMenuOpen((o) => !o)} aria-label="Open menu">
+            {/* Mobile menu button */}
+            <button
+              type="button"
+              className="lg:hidden p-2 rounded-md hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              onClick={() => setIsMobileMenuOpen((v) => !v)}
+            >
               {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </Button>
+            </button>
           </div>
         </div>
+
+        {/* Thin teal underline on scroll */}
+        {isScrolled && <div className="header-underline-teal mt-2" />}
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div className="fixed inset-0 z-50 lg:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-            <motion.div className="absolute right-0 top-0 h-full w-[78vw] max-w-[360px] bg-white shadow-2xl" initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} role="dialog" aria-modal="true">
-              <div className="p-6">
-                <div className="flex justify-end mb-6">
-                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
-                    <X className="w-6 h-6" />
-                  </Button>
-                </div>
-
-                <nav className="space-y-2">
-                  {navigationItems.map((item) => {
-                    const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
-                    if (item.name === 'Treatments' && hasSub) {
-                      return (
-                        <div key={item.name}>
-                          <button
-                            type="button"
-                            className="w-full text-left py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100 flex items-center justify-between"
-                            aria-expanded={mobileTreatmentsOpen}
-                            onClick={() => {
-                              setMobileTreatmentsOpen((o) => !o);
-                              if (mobileTreatmentsOpen) setMobileOpenSubGroup(null);
-                            }}
-                          >
-                            <span>{item.name}</span>
-                            <span className={`transition-transform ${mobileTreatmentsOpen ? 'rotate-180' : ''}`}>▾</span>
-                          </button>
-
-                          <AnimatePresence>
-                            {mobileTreatmentsOpen && (
-                              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="ml-2 pl-2 border-l border-gray-100">
-                                {item.submenu!.map((sub) => {
-                                  const key = sub.href.split('/').pop() as keyof typeof TREATMENT_GROUPS;
-                                  const group = TREATMENT_GROUPS[key];
-                                  const open = mobileOpenSubGroup === key;
-
-                                  return (
-                                    <div key={sub.href} className="mb-2">
-                                      <button
-                                        type="button"
-                                        aria-expanded={open}
-                                        className="w-full text-left py-2 font-medium text-brand-text hover:text-brand-magenta transition-colors flex items-center justify-between"
-                                        onClick={() => setMobileOpenSubGroup(open ? null : key)}
-                                      >
-                                        <span>{sub.name}</span>
-                                        <span className={`transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
-                                      </button>
-
-                                      <AnimatePresence>
-                                        {open && group && (
-                                          <motion.ul initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="ml-2">
-                                            {group.items.map((leaf) => (
-                                              <li key={leaf.slug}>
-                                                <Link href={`/treatments/${key}/${leaf.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash">
-                                                  {leaf.label}
-                                                </Link>
-                                              </li>
-                                            ))}
-                                          </motion.ul>
-                                        )}
-                                      </AnimatePresence>
-                                    </div>
-                                  );
-                                })}
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
-                        </div>
-                      );
-                    }
+          <motion.aside
+            role="dialog"
+            aria-modal="true"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.18 }}
+            className="lg:hidden fixed inset-x-0 top-[64px] z-[60] bg-white/95 backdrop-blur-md border-b border-black/10"
+          >
+            <div className="container-luxury py-4">
+              <nav className="space-y-2">
+                {BASE_ITEMS.map((item) => {
+                  if (item.name !== 'Treatments') {
                     return (
-                      <div key={item.name}>
-                        <Link href={item.href} className="block py-3 text-lg font-medium text-brand-text hover:text-brand-magenta transition-colors border-b border-gray-100" onClick={() => setIsMobileMenuOpen(false)}>
-                          {item.name}
-                        </Link>
-                      </div>
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block px-2 py-3 rounded-md hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
                     );
-                  })}
-                </nav>
-
-                <div className="mt-8 space-y-4">
-                  <Button variant="outline" className="w-full btn-coastal border-brand-turquoise text-brand-turquoise hover:bg-brand-turquoise hover:text-white" asChild>
-                    <Link href="/emergency">Emergency Dentist</Link>
-                  </Button>
-                  <Button className="w-full btn-coastal bg-gradient-to-r from-brand-magenta to-brand-turquoise text-white hover:shadow-lg glow-magenta" asChild>
-                    <Link href="/booking">Book Consultation</Link>
-                  </Button>
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-gray-100 space-y-3">
-                  <div className="flex items-center gap-3 text-sm text-brand-muted">
-                    <Phone className="w-4 h-4" />
-                    <a href={`tel:${contactInfo.phone}`} className="hover:text-brand-magenta transition-colors">
-                      {contactInfo.phone}
-                    </a>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm text-brand-muted">
-                    <Mail className="w-4 h-4" />
-                    <a href={`mailto:${contactInfo.email}`} className="hover:text-brand-magenta transition-colors">
-                      {contactInfo.email}
-                    </a>
-                  </div>
-                  <div className="flex items-start gap-3 text-sm text-brand-muted">
-                    <MapPin className="w-4 h-4 mt-0.5" />
-                    <span>{contactInfo.address}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
+                  }
+                  // Treatments accordion
+                  return (
+                    <div key="Treatments" className="border-t border-black/10 pt-2">
+                      <button
+                        type="button"
+                        className="w-full flex items-center justify-between px-2 py-3 rounded-md hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise"
+                        aria-expanded={mobileTreatmentsOpen}
+                        onClick={() => setMobileTreatmentsOpen((v) => !v)}
+                      >
+                        <span>Treatments</span>
+                        <span className="text-xs opacity-70">{mobileTreatmentsOpen ? 'Hide' : 'Show'}</span>
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {mobileTreatmentsOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.18 }}
+                            className="overflow-hidden pl-2"
+                          >
+                            {/* Groups */}
+                            <ul className="py-1 space-y-1">
+                              {groupOrder.map((g) => (
+                                <li key={g} className="rounded-md">
+                                  <button
+                                    type="button"
+                                    className="w-full text-left px-2 py-2 rounded-md hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise"
+                                    aria-expanded={mobileOpenGroup === g}
+                                    onClick={() => setMobileOpenGroup((cur) => (cur === g ? null : g))}
+                                  >
+                                    <span className="lux-gradient font-medium">
+                                      {groupDisplay[g] ?? TREATMENT_GROUPS[g].title}
+                                    </span>
+                                  </button>
+                                  <AnimatePresence initial={false}>
+                                    {mobileOpenGroup === g && (
+                                      <motion.ul
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.18 }}
+                                        className="pl-3 pb-2 space-y-1"
+                                      >
+                                        {TREATMENT_GROUPS[g].items.map((leaf) => (
+                                          <li key={leaf.slug}>
+                                            <Link
+                                              href={`/treatments/${leaf.slug}`}
+                                              className="block px-2 py-1 rounded sm menu-leaf menu-leaf-gradient menu-gold-shimmer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-turquoise/60"
+                                              onClick={() => setIsMobileMenuOpen(false)}
+                                            >
+                                              {leaf.label}
+                                            </Link>
+                                          </li>
+                                        ))}
+                                      </motion.ul>
+                                    )}
+                                  </AnimatePresence>
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+              </nav>
+            </div>
+          </motion.aside>
         )}
       </AnimatePresence>
     </>
   );
 }
+
+export default Header;

@@ -1,0 +1,65 @@
+/* components/layout/header.menu.css
+   Scoped styles for Treatments flyout leaf gradient + gold shimmer.
+   Safe: transform/opacity only; respects reduced-motion.
+*/
+.menu-leaf {
+  position: relative;
+  display: inline-block;
+  line-height: 1.2;
+}
+
+.menu-leaf-gradient {
+  background: linear-gradient(90deg, #C2185B 0%, #40C4B4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Metallic gold sweep overlay across the glyphs (not a block) */
+.menu-gold-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Narrow specular streak with the requested ramp */
+  background: linear-gradient(
+    100deg,
+    rgba(139,107,0,0) 0%,
+    #8b6b00 20%,
+    #d4af37 44%,
+    #fff4b0 50%,
+    #d4af37 56%,
+    #997300 80%,
+    rgba(153,115,0,0) 100%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateX(-35%);
+}
+
+.menu-leaf:hover::after,
+.menu-leaf:focus-visible::after {
+  animation: goldSweep 0.7s ease-out forwards;
+}
+
+@keyframes goldSweep {
+  0%   { opacity: 0; transform: translateX(-45%); }
+  10%  { opacity: 0.95; }
+  60%  { opacity: 0.55; }
+  100% { opacity: 0; transform: translateX(120%); }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .menu-leaf:hover::after,
+  .menu-leaf:focus-visible::after {
+    animation: none;
+  }
+}
+
+/* Thin teal underline for sticky header on scroll (used by an extra div) */
+.header-underline-teal {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(64,196,180,0) 0%, rgba(64,196,180,0.6) 50%, rgba(64,196,180,0) 100%);
+  opacity: .9;
+}
