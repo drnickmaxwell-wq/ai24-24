@@ -1,0 +1,1 @@
+{ "buildCommand": "pnpm install --frozen-lockfile && pnpm build" }
