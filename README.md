@@ -44,5 +44,7 @@ The website is deployed to a public URL using the `service_deploy_frontend` tool
 ## Documentation
 
 - **Technical Documentation:** [./docs/technical.md](./docs/technical.md)
-- **User Guide (Admin Dashboard):** [./docs/user-guide.md](./docs/user-guide.md)
+- **User Guide (Admin Dashboard):** [./docs/user-guide.md](./docs/user-guide.md
+
+- <!-- trigger vercel build -->
 - **API Documentation:** [./docs/api.md](./docs/api.md)
