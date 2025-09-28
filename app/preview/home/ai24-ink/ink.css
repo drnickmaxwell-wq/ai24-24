@@ -1,0 +1,21 @@
+.ink { {
+  --background: #0b0b0e;
+  --foreground: #EAEAF2;
+  --card: #12141a;
+  --card-foreground: #EAEAF2;
+  --muted: #1a1e27;
+  --muted-foreground: #A5ABB8;
+  --border: #222431;
+  --input: #222431;
+  --primary: var(--brand-magenta);
+  --secondary: var(--brand-turquoise);
+  --accent: var(--brand-gold);
+  --brand-surface: #12141a;
+  --brand-text: #EAEAF2;
+  --brand-muted: #A5ABB8;
+  color: var(--foreground);
+  background-color: var(--background);
+}
+
+/* Optional: override text classes for dark theme specific adjustments */
+
