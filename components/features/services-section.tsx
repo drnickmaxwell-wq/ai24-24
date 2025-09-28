@@ -177,7 +177,7 @@ export function ServicesSection() {
                   )}
 
                   {/* Gradient Background */}
-                  <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${service.color}`} />
+                  <div className={`absolute top-0 left-0 right-0 h-2h-2 rounded-t-lg bg-gradient-to-r ${service.color}`} />
 
                   <LuxuryCardHeader>
                     <div className="flex items-center gap-4 mb-4">
