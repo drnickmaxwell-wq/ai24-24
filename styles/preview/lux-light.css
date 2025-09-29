@@ -1,0 +1,20 @@
+/* Lux Light preview styles */
+:root {
+  --brand-magenta: #C2185B;
+  --brand-turquoise: #40C4B4;
+  --brand-gold: #D4AF37;
+  --surface: #FFFFFF;
+  --surface-2: #F8FAFC;
+  --surface-3: #E1E5EB;
+  --text: #1A202C;
+  --text-muted: #4A5568;
+  --text-light: #A0AEC0;
+  --emergency: #FF3B30;
+  --success: #48BB78;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Lora', serif;
+  --container-max: 120rem;
+  --section-padding: 8rem;
+  --card-radius: 1.5rem;
+  --button-radius: 1rem;
+}
