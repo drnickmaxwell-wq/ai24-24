@@ -176,7 +176,7 @@ export function HeroSection() {
             className="text-front-headline font-bold text-brand-text mb-6 leading-tight"
           >
             Experience Luxury{' '}
-            <span className="bg-gradient-to-r from-brand-magenta to-brand-turquoise bg-clip-text text-transparent">
+            <span className="gradient-heading">
               Dental Care
             </span>{' '}
             by the Sea
@@ -294,4 +294,3 @@ export function HeroSection() {
     </section>
   );
 }
-

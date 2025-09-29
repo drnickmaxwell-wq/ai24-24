@@ -131,9 +131,7 @@ export function ServicesSection() {
             className="text-content-headline font-bold text-brand-text mb-6"
           >
             Advanced 3D Dentistry &{' '}
-            <span className="bg-gradient-to-r from-brand-magenta to-brand-turquoise bg-clip-text text-transparent">
-              AI-Powered Care
-            </span>
+            <s<span className="gradient-heading">AI-Powered Care</span>
           </motion.h2>
 
           <motion.p

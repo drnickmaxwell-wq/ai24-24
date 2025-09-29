@@ -135,9 +135,7 @@ export function TestimonialsSection() {
 
             <h2 className="text-content-headline font-bold text-brand-text mb-6">
               Real Smiles,{' '}
-              <span className="bg-gradient-to-r from-brand-magenta to-brand-turquoise bg-clip-text text-transparent">
-                Real Stories
-              </span>
+              <span className="gradient-heading">Real Stories</span>      </span>
             </h2>
 
             <p className="text-xl text-brand-muted max-w-3xl mx-auto leading-relaxed">
