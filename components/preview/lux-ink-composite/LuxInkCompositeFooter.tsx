@@ -6,8 +6,7 @@
 'use client';
 
 import React from 'react';
-import { ExactFooter } from '@components/exact/ExactFooter';
-
+import { ExactFooter } from '@/components/exact/ExactFooter';
 export default function LuxInkCompositeFooter() {
   return (
     <div
