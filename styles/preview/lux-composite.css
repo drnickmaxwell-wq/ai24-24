@@ -34,8 +34,8 @@ button:focus {
 
 /* Footer adjustments */
 footer {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
 }
 
 /* Emergency banner radius reduction */
@@ -48,4 +48,38 @@ footer {
   button::after {
     display: none;
   }
+  
+/* Lux composite nav/CTA gold shimmer enhancements */
+.shimmer-text::after {
+  /* Narrower sweep width and updated animation timing */
+  animation: lux-shimmer-underline 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
+  background-size: 250% 1px;
+}
+@keyframes lux-shimmer-underline {
+  0% {
+    background-position: -150%;
+  }
+  100% {
+    background-position: 150%;
+  }
+}
+/* Gold flash links: adjust sweep width and timing for metallic specular effect */
+.lux-gold-flash::after {
+  transition: opacity 0.3s, background-position 1.1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  background-size: 200% 100%;
+}
+.lux-gold-flash:hover::after,
+.lux-gold-flash:focus::after {
+  background-position: -50% 0;
+}
+/* Respect prefers-reduced-motion: disable shimmer/flash animation on nav/CTA */
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-text::after,
+  .lux-gold-flash::after {
+    animation: none;
+    transition: none;
+    background-position: 0 0;
+  }
+}
+
 }
