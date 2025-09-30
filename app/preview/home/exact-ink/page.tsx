@@ -1,5 +1,5 @@
-'''
 'use client';
+
 
 import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
@@ -26,4 +26,6 @@ export default function ExactHomepageInkPreview() {
     </div>
   );
 }
-'''
+
+  
+

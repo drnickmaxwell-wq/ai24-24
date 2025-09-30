@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import TreatmentsMenu from '@/components/nav/TreatmentsMenu';
 import { useBrandColors } from '@/components/providers/theme-provider';
 import { TREATMENT_GROUPS } from '@/components/treatments/groups';
 
@@ -118,37 +119,17 @@ export function Header() {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-8">
-              {navigationItems.map((item) => {
-                const hasSub = Array.isArray(item.submenu) && item.submenu.length > 0;
-                return (
-                  <div key={item.name} className="relative" onMouseEnter={() => hasSub && setDesktopActiveSubmenu(item.name)} onMouseLeave={() => setDesktopActiveSubmenu(null)}>
-                    {hasSub ? (
-                      <button type="button" className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1" aria-haspopup="true" aria-expanded={desktopActiveSubmenu === item.name}>
-                        {item.name}
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
-                      </button>
-                    ) : (
-                      <Link href={item.href} className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1">
-                        {item.name}
-                        <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
-                      </Link>
-                    )}
-                    {hasSub && (
-                      <AnimatePresence>
-                        {desktopActiveSubmenu === item.name && (
-                          <motion.div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50" variants={submenuVariants} initial="closed" animate="open" exit="closed" transition={{ duration: 0.2 }}>
-                            {item.submenu!.map((sub) => (
-                              <Link key={sub.name} href={sub.href} className="block px-4 py-2 text-brand-text hover:text-brand-magenta hover:bg-gray-50 transition-colors duration-200">
-                                {sub.name}
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    )}
-                  </div>
-                );
-              })}
+              {/* Render all items except Treatments using the existing logic */}
+              {navigationItems.filter((item) => item.name !== 'Treatments').map((item) => (
+                <div key={item.name} className="relative">
+                  <Link href={item.href} className="text-brand-text hover:text-brand-magenta transition-colors duration-300 font-medium relative group px-2 py-1">
+                    {item.name}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-magenta to-brand-turquoise group-hover:w-full transition-all duration-300" />
+                  </Link>
+                </div>
+              ))}
+              {/* Treatments uses our custom menu */}
+              <TreatmentsMenu />
             </nav>
 
             {/* Desktop CTAs */}
@@ -226,7 +207,11 @@ export function Header() {
                                           <motion.ul initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="ml-2">
                                             {group.items.map((leaf) => (
                                               <li key={leaf.slug}>
-                                                <Link href={`/treatments/${key}/${leaf.slug}`} onClick={() => setIsMobileMenuOpen(false)} className="block text-xs px-2 py-1 rounded-md lux-gradient lux-gold-sparkle hover:lux-hover-wash">
+                                                <Link
+                                                  href={`/treatments/${key}/${leaf.slug}`}
+                                                  onClick={() => setIsMobileMenuOpen(false)}
+                                                  className="block text-xs px-2 py-1 rounded-md gradient-text lux-gold-flash"
+                                                >
                                                   {leaf.label}
                                                 </Link>
                                               </li>
