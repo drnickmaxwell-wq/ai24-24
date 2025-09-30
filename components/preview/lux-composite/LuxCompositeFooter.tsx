@@ -9,7 +9,7 @@ import { ExactFooter } from '@/components/exact/ExactFooter';
 
 export default function LuxCompositeFooter() {
   return (
-    <div style={{ backgroundColor: 'var(--navy, #0A1220)' }}>
+    <<div className="composite-footer" style={{ backgroundColor: 'var(--navy,#0A1220)' }}>
       <ExactFooter />
     </div>
   );
