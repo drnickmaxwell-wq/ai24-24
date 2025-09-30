@@ -5,6 +5,7 @@
 'use client';
 
 import React from 'react';
+import '@/styles/preview/lux-composite.css';
 // Import shared sections from exact variants. These components should
 // remain untouched; any stylistic overrides are applied in wrapper
 // components within the lux-composite namespace.
@@ -19,7 +20,7 @@ import HeroLuxe from '@/components/preview/lux/HeroLuxe';
 // Import the wave section wrapper specific to the composite. This
 // component simply renders an existing wave background component
 // beneath the hero.
-import LuxWaveSection from '@/components/preview/lux-composite/LuxWaveSection';
+import LuxWaveBand from '@/components/preview/lux-composite/LuxWaveBand';
 // Import a custom footer wrapper to enforce the navy background.
 import LuxCompositeFooter from '@/components/preview/lux-composite/LuxCompositeFooter';
 
@@ -42,9 +43,8 @@ export default function LuxCompositePage() {
       <main className="flex-grow">
         {/* Hero with video slot and gradient fallback */}
         <HeroLuxe />
-        {/* Wave background directly beneath the hero */}
-        <LuxWaveSection />
-        {/* Luxury treatment cards followed by reviews */}
+        {/* Wave background directly beneath the hero LuxWaveBand treatment cards followed by reviews */}
+                <LuxWaveBand />
         <ExactLuxuryTreatmentCards />
         <ExactReviews />
       </main>
