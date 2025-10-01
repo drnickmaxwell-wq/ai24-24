@@ -352,7 +352,10 @@
     
     .btn-coastal:hover {
       transform: none;
-  
+
+          }
+
+}
     
 @layer components {
   .shimmer-once {
