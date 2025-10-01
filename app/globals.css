@@ -350,12 +350,16 @@
       display: none;
     }
     
-    .btn-coastal:hover {
+    .btn-coastal:hover 
       transform: none;
-  
+}
+          }
+}
+}
     
 @layer components {
   .shimmer-once {
+    
     position: relative;
     overflow: hidden;
     display: inline-block;
@@ -380,11 +384,10 @@
     .shimmer-once::before {
       animation: none;
     }
-  }
 }
+
 }
-  }
-}
+
 
 
 
