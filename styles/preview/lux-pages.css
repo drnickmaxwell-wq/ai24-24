@@ -1,0 +1,9 @@
+/* Preview-specific overrides for imported Lux pages.
+   This file remains mostly empty because the provided artifacts were empty or missing.
+   If additional fixes are needed for specific pages, wrap styles in a page-level class, e.g.,
+   .lux-page--careers { ... }
+*/
+
+@media (prefers-reduced-motion: reduce) {
+  /* no motion to reduce for placeholder pages */
+}
