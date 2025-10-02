@@ -1,24 +1,16 @@
 'use client';
-
-import HeroLuxe from '@/components/preview/lux/HeroLuxe';
-import { LuxuryButton as LuxCTAButton } from '@/components/ui/luxury-button';
-import FooterLuxe from '@/components/preview/lux/FooterLuxe';
-import WaveBand from '@/components/preview/lux-composite/LuxWaveSection';
+import '@/styles/preview/lux-composite.css';
 
 export default function LuxArtifactPreviewPage() {
   return (
-    <>
-      <HeroLuxe
-        title="St Mary's House Dental Care"
-        subtitle="Your perfect smile is just one click away"
-      />
-      {/* Wave band as separate section below hero */}
-      <WaveBand />
-      <section className="lux-buttons-wrapper" style={{ padding: '2rem', textAlign: 'center' }}>
-        <LuxCTAButton variant="primary">Book Free Consultation</LuxCTAButton>
-        <LuxCTAButton variant="secondary">Try AI Smile Quiz</LuxCTAButton>
-      </section>
-      <FooterLuxe variant="light" />
-    </>
+    <main className="min-h-screen flex items-center justify-center p-10 text-center">
+      <div>
+        <h1 className="text-2xl font-semibold">LUX Artifact Preview (temporarily stubbed)</h1>
+        <p className="mt-3 opacity-80">
+          Unresolved <code>@artifact/*</code> imports have been removed to unblock the build.
+          The original artifact code remains untouched elsewhere.
+        </p>
+      </div>
+    </main>
   );
 }
