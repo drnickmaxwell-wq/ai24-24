@@ -44,7 +44,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  
+
   /* St Mary's Brand Colors */
   --color-brand-magenta: #C2185B;
   --color-brand-turquoise: #40C4B4;
@@ -92,7 +92,7 @@
   --sidebar-accent-foreground: #1A1C1F;
   --sidebar-border: #E0E0E0;
   --sidebar-ring: #C2185B;
-  
+
   /* Custom brand variables */
   --brand-magenta: #C2185B;
   --brand-turquoise: #40C4B4;
@@ -130,11 +130,11 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   body {
     @apply bg-background text-foreground;
     font-family: 'Lora', Georgia, serif;
@@ -142,58 +142,63 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Montserrat', system-ui, sans-serif;
     font-weight: 600;
     line-height: 1.2;
   }
-  
+
   /* Luxury typography scale */
   .text-front-headline {
     font-size: 4.5rem;
     font-weight: 700;
     font-family: 'Montserrat', system-ui, sans-serif;
   }
-  
+
   .text-front-subtitle {
     font-size: 2.25rem;
     font-weight: 500;
     font-family: 'Montserrat', system-ui, sans-serif;
   }
-  
+
   .text-front-body {
     font-size: 1.5rem;
     font-family: 'Lora', Georgia, serif;
   }
-  
+
   .text-content-headline {
     font-size: 2.25rem;
     font-weight: 600;
     font-family: 'Montserrat', system-ui, sans-serif;
   }
-  
+
   .text-content-subtitle {
     font-size: 1.5rem;
     font-weight: 500;
     font-family: 'Montserrat', system-ui, sans-serif;
   }
-  
+
   .text-content-body {
     font-size: 1.25rem;
     font-family: 'Lora', Georgia, serif;
   }
-  
+
   /* Mobile responsive typography */
   @media (max-width: 768px) {
     .text-front-headline {
       font-size: 3rem;
     }
-    
+
     .text-front-subtitle {
       font-size: 1.75rem;
     }
-    
+
     .text-content-headline {
       font-size: 1.875rem;
     }
@@ -201,29 +206,30 @@
 }
 
 @layer components {
+
   /* Luxury glow effects */
   .glow-magenta {
     box-shadow: 0 0 20px rgba(194, 24, 91, 0.25);
   }
-  
+
   .glow-turquoise {
     box-shadow: 0 0 20px rgba(64, 196, 180, 0.25);
   }
-  
+
   .glow-gold {
     box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
   }
-  
+
   .glow-soft {
     box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
   }
-  
+
   /* Shimmer effect */
   .shimmer {
     position: relative;
     overflow: hidden;
   }
-  
+
   .shimmer::before {
     content: '';
     position: absolute;
@@ -231,33 +237,31 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.4),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent);
     animation: shimmer 2s infinite;
   }
-  
+
   /* Container with max width */
   .container-luxury {
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 1rem;
   }
-  
+
   /* Coastal button styles */
   .btn-coastal {
     position: relative;
     overflow: hidden;
     transition: all 0.3s ease;
   }
-  
+
   .btn-coastal:hover {
     transform: translateY(-2px);
   }
-  
+
   .btn-coastal::before {
     content: '';
     position: absolute;
@@ -265,144 +269,143 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent);
     transition: left 0.5s;
   }
-  
+
   .btn-coastal:hover::before {
     left: 100%;
   }
 }
 
 @layer utilities {
+
   /* Animation keyframes */
   @keyframes shimmer {
     0% {
       transform: translateX(-100%);
     }
+
     100% {
       transform: translateX(100%);
     }
   }
-  
+
   @keyframes breathe {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: scale(1);
     }
+
     50% {
       transform: scale(1.05);
     }
   }
-  
+
   @keyframes wave {
     0% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-10px);
     }
+
     100% {
       transform: translateY(0px);
     }
   }
-  
+
   @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-20px);
     }
   }
-  
+
   /* Animation utilities */
   .animate-shimmer {
     animation: shimmer 2s infinite;
   }
-  
+
   .animate-breathe {
     animation: breathe 3s ease-in-out infinite;
   }
-  
+
   .animate-wave {
     animation: wave 2s ease-in-out infinite;
   }
-  
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
-  
-  /* Reduced motion support */
+
+  /* Reduced motion support (GLOBAL) */
   @media (prefers-reduced-motion: reduce) {
+
     .animate-shimmer,
     .animate-breathe,
     .animate-wave,
     .animate-float {
       animation: none;
     }
-    
+
     .shimmer::before {
       display: none;
     }
-    
+
     .btn-coastal:hover {
       transform: none;
     }
   }
-}
 
-
-
-/* Gradient and shimmer utilities */
-@layer components {
-  .gradient-text,
-  .text-lux-gradient {
-    @apply bg-clip-text text-transparent from-brand-magenta to-brand-turquoise bg-gradient-to-r;
-  }
-  .lux-gold-flash {
-    position: relative;
-    overflow: hidden;
-  }
-  .lux-gold-flash::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--brand-gold), #f5d26a, var(--brand-gold));
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .lux-gold-flash:hover::after,
-  .lux-gold-flash:focus::after {
-    opacity: 1;
-  }
-  .shimmer-text {
-    position: relative;
-    overflow: hidden;
-  }
-  .shimmer-text::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--brand-gold), transparent);
-    animation: shimmer-underline 2s infinite;
-  }
-}
-
-@layer utilities {
-  @keyframes shimmer-underline {
-    0% {
-      background-position: -200%;
+  /* Shimmer-once definitions OUTSIDE media queries/layers to avoid parse errors */
+  @layer components {
+    .btn-coastal {
+      transition: transform .2s ease;
     }
-    100% {
-      background-position: 200%;
+
+    .btn-coastal:hover {
+      transform: translateY(-1px);
+    }
+
+    .shimmer-once {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .shimmer-once::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .6), transparent);
+      transform: translateX(-100%);
+      animation: shimmer-once 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
   }
-}
+
+  @layer utilities {
+    @keyframes shimmer-once {
+      to {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .shimmer-once::before {
+        animation: none;
+      }
+    }
+  }
+
+  /* --- EOF --- */

@@ -1,0 +1,68 @@
+/* ---------------------------------------------------------
+   LUX preview pages baseline CSS (SAFE BUILD VERSION)
+   Scope: preview-only pages under /app/preview/lux/**
+   Colors use design tokens with safe fallbacks.
+   --------------------------------------------------------- */
+
+/* Page wrapper */
+.lux-page {
+  min-height: 100vh;
+  background: var(--page-bg, transparent);
+  color: var(--text, #0E1220);
+}
+
+/* Per-page scopes (extend gently) */
+.lux-page--careers {}
+.lux-page--fees-finance {}
+.lux-page--legal-pack {}
+.lux-page--referrals {}
+.lux-page--team-member-detail {}
+.lux-page--treatment-detail {}
+.lux-page--blog {}
+.lux-page--blog-post {}
+.lux-page--gallery {}
+.lux-page--appointments {}
+.lux-page--emergency {}
+.lux-page--finance {}
+.lux-page--patient-stories {}
+.lux-page--technology {}
+.lux-page--team {}
+.lux-page--contact {}
+.lux-page--treatments {}
+
+/* Gradient text utility (tokens only, with fallbacks) */
+.lux-gradient-text {
+  background: linear-gradient(90deg,
+    var(--magenta, #C2185B),
+    var(--turquoise, #40C4B4)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Optional shimmer-once effect for preview CTAs */
+.shimmer-once {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.shimmer-once::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+  transform: translateX(-100%);
+  animation: shimmer-once 1.1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+@keyframes shimmer-once {
+  to { transform: translateX(100%); }
+}
+
+/* Respect reduced motion everywhere in preview pages */
+@media (prefers-reduced-motion: reduce) {
+  .shimmer-once::before { animation: none; }
+  .lux-gradient-text { color: inherit; background: none; -webkit-background-clip: border-box; }
+}
+
+/* --- EOF (keep this closing comment to avoid accidental partial copies) --- */
