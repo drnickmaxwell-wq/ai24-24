@@ -1,4 +1,3 @@
 :root{--magenta:#C2185B;--turquoise:#40C4B4;--gold:#D4AF37;--navy:#0A1220}
 .lux-page{min-height:100vh;background:var(--navy);color:inherit}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-be
-  havior:auto !important}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}}
