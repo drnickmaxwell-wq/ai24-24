@@ -1,0 +1,11 @@
+/* ===== LUX PREVIEW SAFE BASELINE (tokens only) ===== */
+:root{
+--magenta:#C2185B;--turquoise:#40C4B4;--gold:#D4AF37;--navy:#0A1220;--offwhite:#F6F7FA
+}
+.lux-page{min-height:100vh;background:var(--navy);color:var(--offwhite)}
+.composite-footer{max-width:1200px;margin-inline:auto;padding:24px 16px}
+.composite-footer .emergency-banner{border-radius:14px;padding:12px 16px}
+@media (prefers-reduced-motion:reduce){
+{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+/* ===== end baseline ===== */
