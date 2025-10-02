@@ -320,40 +320,5 @@
     }
   }
   
-  /* Animation utilities */
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-  }
-  
-  .animate-breathe {
-    animation: breathe 3s ease-in-out infinite;
-  }
-  
-  .animate-wave {
-    animation: wave 2s ease-in-out infinite;
-  }
-  
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-shimmer,
-    .animate-breathe,
-    .animate-wave,
-    .animate-float {
-      animation: none;
-    }
-    
-    .shimmer::before {
-      display: none;
-    }
-    
-    .btn-coastal:hover {
-      transform: none;
-    }
-  
-}
 
 
