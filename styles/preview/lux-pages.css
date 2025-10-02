@@ -1,0 +1,7 @@
+.lux-page { min-height: 100vh; background: var(--navy, #0A1220); color: var(--offwhite, #F6F7FA); }
+.lux-page--treatments {} .lux-page--team {} .lux-page--contact {} .lux-page--technology {}
+.lux-page--emergency {} .lux-page--appointments {} .lux-page--finance {} .lux-page--gallery {}
+.lux-page--patient-stories {} .lux-page--blog {} .lux-page--blog-post {} .lux-page--treatment-detail {} .lux-page--team-member-detail {}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
