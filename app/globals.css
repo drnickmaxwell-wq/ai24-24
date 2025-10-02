@@ -337,23 +337,20 @@
     animation: float 3s ease-in-out infinite;
   }
   
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-shimmer,
-    .animate-breathe,
-    .animate-wave,
-    .animate-float {
-      animation: none;
-    }
-    
-    .shimmer::before {
-      display: none;
-    }
-    
-    .btn-coastal:hover {
-      transform: none;
   
-    
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-breathe,
+  .animate-wave,
+  .animate-float {
+    animation: none;
+  }
+  .shimmer::before { display: none; }
+  .btn-coastal:hover { transform: none; }
+}
+
+/* Shimmer-once definitions outside the media query */
 @layer components {
   .shimmer-once {
     position: relative;
@@ -366,28 +363,18 @@
     inset: 0;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
     transform: translateX(-100%);
-    aniation: shimmer-once 1.5s ease-in-out forwards;
+    animation: shimmer-once 1.5s cubic-bezier(0.22,0.61,0.36,1) forwards;
   }
 }
 
 @layer utilities {
   @keyframes shimmer-once {
-    to {
-      transform: translateX(100%);
-    }
+    to { transform: translateX(100%); }
   }
   @media (prefers-reduced-motion: reduce) {
-    .shimmer-once::before {
-      animation: none;
-    }
+    .shimmer-once::before { animation: none; }
   }
 }
-}
-  }
-}
-
-
-
 /* Gradient and shimmer utilities */
 @layer components {
   .gradient-text,
