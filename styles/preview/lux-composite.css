@@ -1,0 +1,53 @@
+/* Preview-specific overrides for Lux composite pages */
+
+/* Reduce tracking and adjust line-height for hero heading */
+section.relative h1 {
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+/* Align shimmer sweep inside buttons */
+button {
+  position: relative;
+  overflow: hidden;
+}
+button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(0);
+  transition: transform 0.8s;
+}
+button:hover::after {
+  transform: translateX(100%);
+}
+
+/* Improve focus ring for buttons */
+button:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Footer adjustments */
+footer {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* Emergency banner radius reduction */
+.emergency-banner {
+  border-radius: 0.5rem;
+}
+
+/* Respect prefers-reduced-motion: disable shimmer animation */
+@media (prefers-reduced-motion: reduce) {
+  button::after {
+    display: none;
+  }
+}
+}
+

@@ -335,28 +335,26 @@
   
   .animate-float {
     animation: float 3s ease-in-out infinite;
-  }
-  
   /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    .animate-shimmer,
-    .animate-breathe,
-    .animate-wave,
-    .animate-float {
-      animation: none;
-    }
-    
-    .shimmer::before {
-      display: none;
-    }
-    
-    .btn-coastal:hover {
-      transform: none;
-    }
-  }
+@media (prefers-reduced-motion: reduce){
+  .animate-shimmer, .animate-breathe, .animate-wave, .animate-float{ animation:none; }
+  .shimmer::before{ display:none; }
+  .btn-coastal:hover{ transform:none; }
 }
 
-
+/* Shimmer-once utilities (top-level, not nested) */
+@layer components{
+  .shimmer-once{ position:relative; overflow:hidden; display:inline-block; }
+  .shimmer-once::before{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);
+    transform:translateX(-100%); animation:shimmer-once 1.5s ease-in-out forwards;
+  }
+}
+@layer utilities{
+  @keyframes shimmer-once{ to{ transform:translateX(100%); } }
+  @media (prefers-reduced-motion: reduce){ .shimmer-once::before{ animation:none; } }
+}
 
 /* Gradient and shimmer utilities */
 @layer components {
@@ -406,3 +404,5 @@
     }
   }
 }
+
+  

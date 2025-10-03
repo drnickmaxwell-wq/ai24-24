@@ -1,6 +1,5 @@
 import ViewerClient from './viewer-client';
 
-export const metadata = { title: '3D Showcase' };
 
 export default function Page() {
   return (
